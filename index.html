@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<title>Official Wynncraft Map</title>
+
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="Minecraft-Overviewer unknown (unknown)" />
+<meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+
+<script type="text/javascript" src="js/overviewerConfig.js"></script>
+<script type="text/javascript" src="js/overviewer.js"></script>
+<script type="text/javascript" src="js/labels.js"></script>
+<script type="text/javascript" src="js/baseMarkers.js"></script>
+<script type="text/javascript" src="js/territoryLocations.js"></script>
+<script type="text/javascript" src="js/playerLocations.js"></script>
+
+<link rel="stylesheet" href="css/day.css" />
+<link rel="stylesheet" href="css/leaflet.css" />
+<script src="js/leaflet.js"></script>
+<link rel="stylesheet" href="css/new_overviewer.css" type="text/css" />
+<link rel="stylesheet" href="css/overviewer.css" type="text/css" />
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.8.2/css/all.min.css" />
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.7.1/clipboard.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+<link href='https://fonts.googleapis.com/css?family=Titillium+Web' rel='stylesheet' type='text/css'>
+
+<!-- Favicons -->
+<link rel="apple-touch-icon" sizes="57x57" href="https://cdn.wynncraft.com/img/ico/apple-icon-57x57.png" />
+<link rel="apple-touch-icon" sizes="60x60" href="https://cdn.wynncraft.com/img/ico/apple-icon-60x60.png" />
+<link rel="apple-touch-icon" sizes="72x72" href="https://cdn.wynncraft.com/img/ico/apple-icon-72x72.png" />
+<link rel="apple-touch-icon" sizes="76x76" href="https://cdn.wynncraft.com/img/ico/apple-icon-76x76.png" />
+<link rel="apple-touch-icon" sizes="114x114" href="https://cdn.wynncraft.com/img/ico/apple-icon-114x114.png" />
+<link rel="apple-touch-icon" sizes="120x120" href="https://cdn.wynncraft.com/img/ico/apple-icon-120x120.png" />
+<link rel="apple-touch-icon" sizes="144x144" href="https://cdn.wynncraft.com/img/ico/apple-icon-144x144.png" />
+<link rel="apple-touch-icon" sizes="152x152" href="https://cdn.wynncraft.com/img/ico/apple-icon-152x152.png" />
+<link rel="apple-touch-icon" sizes="180x180" href="https://cdn.wynncraft.com/img/ico/apple-icon-180x180.png" />
+<link rel="icon" type="image/png" sizes="192x192" href="https://cdn.wynncraft.com/img/ico/android-icon-192x192.png" />
+<link rel="icon" type="image/png" sizes="32x32" href="https://cdn.wynncraft.com/img/ico/favicon-32x32.png" />
+<link rel="icon" type="image/png" sizes="96x96" href="https://cdn.wynncraft.com/img/ico/favicon-96x96.png" />
+<link rel="icon" type="image/png" sizes="16x16" href="https://cdn.wynncraft.com/img/ico/favicon-16x16.png" />
+
+</head>
+
+<body scroll="no" style="overflow:hidden">
+    <div class="nav-media-discord">
+        <a class="discord" href="https://discord.gg/yJkSQwp" target="_blank">
+            <i class="fab fa-2x fa-discord"></i>
+        </a>
+    </div>
+    <div class="nav-media">
+        <a class="nav-media-youtube" href="https://www.youtube.com/channel/UC-ZXrUQOrtYcqAGx9F9IEeQ" target="_blank">
+            <i class="fab fa-2x fa-youtube-square"></i>
+        </a>
+        <a href="https://twitter.com/Wynncraft" target="_blank">
+            <i class="fab fa-2x fa-twitter-square"></i>
+        </a>
+        <a href="https://www.reddit.com/r/WynnCraft/" target="_blank">
+            <i class="fab fa-2x fa-reddit-square"></i>
+        </a>
+        <!-- <a href="https://www.twitch.tv/directory/game/Wynncraft" target="_blank">
+            <i class="fab fa-2x fa-twitch"></i>
+        </a> -->
+    </div>
+    <input id="toggle" type="checkbox"></input>
+    <label class="toggle" for="toggle"></label>
+    <nav role="navigation" class="navbar navbar-inverse navbar-fixed-top">
+        <div class="container navContainer">
+            <div class="navbar-collapse collapse">
+                <ul id="nav" class="nav navbar-nav">
+                    <!-- <li><a href="https://wynncraft.com/1.20" class="sprite-navbar-button update"></a></li> -->
+                    <li><a href="https://wynncraft.com/" class="sprite-navbar-button home"></a></li>
+                    <li><a href="https://wynncraft.com/#about" class="sprite-navbar-button about"></a></li>
+                    <li><a href="https://wynncraft.com/#news" class="sprite-navbar-button news"></a></li>
+                    <li><a href="https://wynncraft.com/store" class="sprite-navbar-button store transition cnleft"></a></li>
+                    <li><a id="forums" href="https://forums.wynncraft.com/" data-toggle=""
+                            class="sprite-navbar-button forums cnright"></a></li>
+                    <li><a href="https://wynncraft.com/help" class="sprite-navbar-button help transition"></a></li>
+                    <li><a href="https://wynncraft.com/stats" class="sprite-navbar-button stats transition"></a></li>
+                    <li class="active"><a id="map" href="https://map.wynncraft.com/" data-toggle="" class="sprite-navbar-button map"></a></li>
+                </ul>
+                <a id="ipImage" title="Click to copy IP to clipboard" style="top:-6px; cursor:pointer"
+                    data-clipboard-text='play.wynncraft.com'></a>
+            </div>
+        </div>
+    </nav>
+    <div id="mcmap">
+        <noscript id="NoJSWarning" style="color:white; background-color:black">
+            If you can see this message, there is likely a problem loading the Overviewer JavaScript components.
+            Check the JavaScript console for error messages.
+        </noscript>
+        <div class="player-track">
+            <p class="player-track-description">You'll see your party, friends, and guild members that are
+                online on
+            </p>
+            <h1 class="player-track-server">
+                <span class="player-track-server-name"></span>
+            </h1>
+        </div>
+    </div>
+    <script>
+        var clipboard = new Clipboard('#ipImage');
+        clipboard.on('success', function (e) {
+            alert("Successfully Copied!");
+            e.clearSelection();
+        });
+        clipboard.on('error', function (e) { });
+    </script>
+</body>
+</html>
