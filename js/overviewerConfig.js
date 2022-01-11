@@ -11,7 +11,7 @@ var overviewerConfig = {
             ], 
             "isOverlay": false, 
             "last_rendertime": 1575421031, 
-            "name": "Wynncraft", 
+            "name": "Isles", 
             "poititle": "Markers", 
             "north_direction": 0, 
             "minZoom": 0, 
@@ -22,8 +22,7 @@ var overviewerConfig = {
             "defaultZoom": 2, 
             "world": "wynn-main", 
             "maxZoom": 9, 
-            //"path": "https://cdn.wynncraft.com/renders", 
-            "path": "Isles", 
+            "path": "https://isnevis.github.io/SkyBlockIslesMap/Isles", 
             "showlocationmarker": true
         }
     ], 
