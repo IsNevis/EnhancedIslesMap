@@ -21,7 +21,6 @@
 <link rel="stylesheet" href="css/overviewer.css" type="text/css" />
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.8.2/css/all.min.css" />
-<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.7.1/clipboard.min.js"></script>
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 
 <link href='https://fonts.googleapis.com/css?family=Titillium+Web' rel='stylesheet' type='text/css'>
@@ -72,8 +71,6 @@
                     <li><a href="https://wynncraft.com/#about" class="sprite-navbar-button about"></a></li>
                     <li class="active"><a id="map" href="https://isnevis.github.io/SkyBlockIslesMap/" data-toggle="" class="sprite-navbar-button map"></a></li>
                 </ul>
-                <a id="ipImage" title="Click to copy IP to clipboard" style="top:-6px; cursor:pointer"
-                    data-clipboard-text='play.skyblockisles.com'></a>
             </div>
         </div>
     </nav>
@@ -83,13 +80,5 @@
             Check the JavaScript console for error messages.
         </noscript>
     </div>
-    <script>
-        var clipboard = new Clipboard('#ipImage');
-        clipboard.on('success', function (e) {
-            alert("Successfully Copied!");
-            e.clearSelection();
-        });
-        clipboard.on('error', function (e) { });
-    </script>
 </body>
 </html>

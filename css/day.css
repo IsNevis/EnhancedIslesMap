@@ -371,16 +371,6 @@ body {
   display: inline-block;
 }
 
-#ipImage {
-  display: block;
-  width: 330px;
-  height: 70px;
-  background: url("https://cdn.wynncraft.com/img/ip.png") center center no-repeat;
-  margin: auto;
-  position: relative;
-  bottom: -5px;
-}
-
 @media (min-width: 1366px) {
   .navbar .container {
     width: 1038px !important;
@@ -487,10 +477,6 @@ a .toggle,
 
   .navbar-collapse {
     width: auto !important;
-  }
-
-  #ipImage {
-    display: none !important;
   }
 
   #forumsBar {
