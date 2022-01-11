@@ -21,7 +21,7 @@ overviewer.territories = null;
 overviewer.current_layer = {};
 
 overviewer.collections = {
-        wcms: [],
+        ISLESms: [],
         /**
          * MapTypes that aren't overlays will end up in here.
          */
@@ -787,8 +787,8 @@ overviewer.util = {
             tileset_name = decodeURI(coords[6]);
         }
         
-        if (world_name == "0") world_name = "Wynncraft - overworld";
-        if (tileset_name == "0") tileset_name = "Wynncraft World";
+        if (world_name == "0") world_name = "SkyblockIsles - overworld";
+        if (tileset_name == "0") tileset_name = "SkyblockIsles World";
         var target_layer = overviewer.collections.mapTypes[world_name][tileset_name];
         var ovconf = target_layer.tileSetConfig;
 
@@ -861,48 +861,48 @@ overviewer.util = {
 	/**
 	 * initIcons
 	 * Custom Function 
-	 * Initialize WynnIcons
+	 * Initialize CustomIcons
 	 */
 	'initIcons': function() {
-		// Add WynnIcons
+		// Add CustomIcons
 		var ovconf = overviewer.current_layer[overviewer.current_world].tileSetConfig;
 		Object.keys(markersDB).forEach(function(k,v) {
 			var category = markersDB[k].name;
 			var raw = markersDB[k].raw;
 			for (var zz in raw) {
-				var wcIcon = L.icon({
+				var ISLESIcon = L.icon({
 					iconUrl: 'img/' + raw[zz].icon,
 					iconRetinaUrl: 'img/' + raw[zz].icon,
 					iconSize: [18, 18]
 				});
-				var wcll = overviewer.util.fromWorldToLatLng(raw[zz].x, raw[zz].y, raw[zz].z, ovconf);
-				var wcm = L.marker(wcll, {icon: wcIcon, title: raw[zz].text});
-				wcm.on('click', function(ev) {
+				var ISLESll = overviewer.util.fromWorldToLatLng(raw[zz].x, raw[zz].y, raw[zz].z, ovconf);
+				var ISLESm = L.marker(ISLESll, {icon: ISLESIcon, title: raw[zz].text});
+				ISLESm.on('click', function(ev) {
 					overviewer.map.setView(ev.latlng);
 				});
-				overviewer.collections.wcms.push(wcm);
-				overviewer.collections.wcms[overviewer.collections.wcms.length - 1].addTo(overviewer.map);
+				overviewer.collections.ISLESms.push(ISLESm);
+				overviewer.collections.ISLESms[overviewer.collections.ISLESms.length - 1].addTo(overviewer.map);
 			}
 		});
 	},
 	/**
 	 * removeIcons
 	 * Custom Function
-	 * Remove WynnIcons
+	 * Remove CustomIcons
 	 */
 	'removeIcons': function() {
-		for (var i in overviewer.collections.wcms) {
-			overviewer.collections.wcms[i].remove();
+		for (var i in overviewer.collections.ISLESms) {
+			overviewer.collections.ISLESms[i].remove();
 		}
 	},
 	/**
 	 * loadIcons
 	 * Custom Function
-	 * Load WynnIcons
+	 * Load CustomIcons
 	 */
 	 'loadIcons': function() {
-		for (var i in overviewer.collections.wcms) {
-			overviewer.collections.wcms[i].addTo(overviewer.map);
+		for (var i in overviewer.collections.ISLESms) {
+			overviewer.collections.ISLESms[i].addTo(overviewer.map);
 		}
 	 }
 };

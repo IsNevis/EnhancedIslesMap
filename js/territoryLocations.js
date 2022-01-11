@@ -1,3 +1,7 @@
+/*
+DISABLED FOR NOW
+*/
+
 var showingTerritories = false;
 var requestInProgress = false;
 var territoryElements = [];
