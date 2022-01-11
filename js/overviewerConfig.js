@@ -22,7 +22,7 @@ var overviewerConfig = {
             "defaultZoom": 2, 
             "world": "wynn-main", 
             "maxZoom": 9, 
-            "path": "https://isnevis.github.io/SkyBlockIslesMap/Isles", 
+            "path": "https://raw.githubusercontent.com/IsNevis/SkyBlockIslesMap/master/data/tiles", 
             "showlocationmarker": true
         }
     ], 
