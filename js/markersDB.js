@@ -24,7 +24,7 @@ xhttp.onreadystatechange = function() {
     overviewer.util.initialize();
   }
 };
-xhttp.open('GET', 'https://api.wynncraft.com/public_api.php?action=mapLocations', true);
+xhttp.open('GET', 'https://raw.githubusercontent.com/IsNevis/SkyBlockIslesMap/master/data/markersDB.json', true);
 xhttp.send();
 
 var markersDB = {
