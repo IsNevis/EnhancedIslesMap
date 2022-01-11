@@ -689,15 +689,12 @@ a .toggle,
     top: 0.5em;
     left: 2.5em;
     font-size: 1.25em; 
+    padding-left: 0.5em;
 }
 
 .nav-media a {
     text-decoration: none;
     padding-right: 0.5em;
-}
-
-.nav-media-youtube {
-    padding-left: 0.5em;
 }
 
 .nav-media a .fab {

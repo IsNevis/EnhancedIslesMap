@@ -243,7 +243,7 @@ overviewer.util = {
 			window.setTimeout(overviewer.util.runReadyQueue(), 2000);
 			overviewer.util.isReady = true;
 		});
-		overviewer.map.attributionControl.setPrefix('<a href="https://wynncraft.com">Wynncraft</a>');
+		overviewer.map.attributionControl.setPrefix('<a href="https://isnevis.github.io">IsNevis</a>');
 		
 		overviewer.map.on('baselayerchange', function(ev) {
 			// before updating the current_layer, remove the marker control, if it exists
