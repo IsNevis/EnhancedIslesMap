@@ -45,7 +45,7 @@ var overviewerConfig = {
             "zoomLevels": 7,
             "defaultZoom": 2,
             "maxZoom": 5,
-            "path": "https://raw.githubusercontent.com/IsNevis/SkyBlockIslesMap/master/data/tiles/Isles",
+            "path": "https://raw.githubusercontent.com/IsNevis/SkyBlockIslesMap/main/data/renders/Isles",
             "base": "",
             "bgcolor": "#1a1a1a",
             "world": "Isles",
