@@ -1,2 +1,1 @@
-# THIS BRANCH IS THE DEV BRANCH !!!!
-Well supposed to be
+# THIS IS THE DEVLOPMENT AND MAY NOT WORK !!!!
