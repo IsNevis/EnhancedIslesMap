@@ -62,9 +62,9 @@ var overviewerConfig = {
             "pan": true
         }, 
         "center": [
-            785, 
+            -636, 
             64, 
-            -464
+            1246
         ], 
         "cacheTag": "1575601333"
     }
