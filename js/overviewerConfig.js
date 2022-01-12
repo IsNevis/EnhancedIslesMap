@@ -10,10 +10,10 @@ var overviewerConfig = {
             "queryMarker": "/img/markers/overviewer/markers/marker_location.png",
             "queryMarker2x": "/img/markers/overviewer/marker_location_2x.png",
             "compass": {
-                "0": "/img/compass_upper-left.png",
-                "1": "/img/compass_upper-right.png",
-                "3": "/img/compass_lower-left.png",
-                "2": "/img/compass_lower-right.png"
+                "0": "/img/nav/compass_upper-left.png",
+                "1": "/img/nav/compass_upper-right.png",
+                "3": "/img/nav/compass_lower-left.png",
+                "2": "/img/nav/compass_lower-right.png"
             }
         },
         "mapDivId": "mcmap",
@@ -45,8 +45,8 @@ var overviewerConfig = {
             "zoomLevels": 7,
             "defaultZoom": 2,
             "maxZoom": 5,
-            "path": "Isles",
-            "base": "https://raw.githubusercontent.com/IsNevis/SkyBlockIslesMap/master/data/tiles",
+            "path": "https://raw.githubusercontent.com/IsNevis/SkyBlockIslesMap/master/data/tiles/Isles",
+            "base": "",
             "bgcolor": "#1a1a1a",
             "world": "Isles",
             "last_rendertime": 1641640000,
