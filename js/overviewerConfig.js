@@ -2,18 +2,18 @@ var overviewerConfig = {
     "CONST": {
         "tileSize": 384,
         "image": {
-            "defaultMarker": "/img/markers/overviewer/signpost.png",
-            "signMarker": "/img/markers/overviewer/signpost_icon.png",
-            "bedMarker": "/img/markers/overviewer/bed.png",
-            "spawnMarker": "/img/markers/overviewer/markers/marker_home.png",
-            "spawnMarker2x": "/img/markers/overviewer/markers/marker_home_2x.png",
-            "queryMarker": "/img/markers/overviewer/markers/marker_location.png",
-            "queryMarker2x": "/img/markers/overviewer/marker_location_2x.png",
+            "defaultMarker": "data/img/markers/overviewer/signpost.png",
+            "signMarker": "data/img/markers/overviewer/signpost_icon.png",
+            "bedMarker": "data/img/markers/overviewer/bed.png",
+            "spawnMarker": "data/img/markers/overviewer/markers/marker_home.png",
+            "spawnMarker2x": "data/img/markers/overviewer/markers/marker_home_2x.png",
+            "queryMarker": "data/img/markers/overviewer/markers/marker_location.png",
+            "queryMarker2x": "data/img/markers/overviewer/marker_location_2x.png",
             "compass": {
-                "0": "/img/nav/compass_upper-left.png",
-                "1": "/img/nav/compass_upper-right.png",
-                "3": "/img/nav/compass_lower-left.png",
-                "2": "/img/nav/compass_lower-right.png"
+                "0": "data/img/nav/compass_upper-left.png",
+                "1": "data/img/nav/compass_upper-right.png",
+                "3": "data/img/nav/compass_lower-left.png",
+                "2": "data/img/nav/compass_lower-right.png"
             }
         },
         "mapDivId": "mcmap",
@@ -45,7 +45,7 @@ var overviewerConfig = {
             "zoomLevels": 7,
             "defaultZoom": 2,
             "maxZoom": 5,
-            "path": "https://raw.githubusercontent.com/IsNevis/EnhancedIslesMap/main/data/renders/Isles",
+            "path": "data/renders/Isles",
             "base": "",
             "bgcolor": "#1a1a1a",
             "world": "Isles",
