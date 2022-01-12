@@ -16,13 +16,13 @@ var overviewerConfig = {
             "north_direction": 0, 
             "minZoom": 0, 
             "bgcolor": "#1a1a1a", 
-            "zoomLevels": 7, 
+            "zoomLevels": 9,
             "base": "", 
             "imgextension": "png", 
             "defaultZoom": 2, 
             "world": "Isles", 
-            "maxZoom": 5, 
-            "path": "https://raw.githubusercontent.com/IsNevis/EnhancedIslesMap/main/data/renders/Isles/", 
+            "maxZoom": 9, 
+            "path": "./data/renders/Isles/", 
             "showlocationmarker": true
         }
     ], 
@@ -32,19 +32,19 @@ var overviewerConfig = {
         "tileSize": 384, 
         "UPPERRIGHT": 1, 
         "image": {
-            "queryMarker": "https://raw.githubusercontent.com/IsNevis/EnhancedIslesMap/main/data/img/markers/overviewer/marker_location.png", 
-            "spawnMarker": "https://raw.githubusercontent.com/IsNevis/EnhancedIslesMap/main/data/img/markers/overviewer/marker_home.png", 
-            "spawnMarker2x": "https://raw.githubusercontent.com/IsNevis/EnhancedIslesMap/main/data/img/markers/overviewer/marker_home_2x.png", 
-            "signMarker": "https://raw.githubusercontent.com/IsNevis/EnhancedIslesMap/main/data/img/markers/overviewer/signpost_icon.png", 
-            "queryMarker2x": "https://raw.githubusercontent.com/IsNevis/EnhancedIslesMap/main/data/img/markers/overviewer/marker_location_2x.png", 
+            "queryMarker": "data/img/markers/overviewer/marker_location.png", 
+            "spawnMarker": "data/img/markers/overviewer/marker_home.png", 
+            "spawnMarker2x": "data/img/markers/overviewer/marker_home_2x.png", 
+            "signMarker": "data/img/markers/overviewer/signpost_icon.png", 
+            "queryMarker2x": "data/img/markers/overviewer/marker_location_2x.png", 
             "compass": {
-                "0": "https://raw.githubusercontent.com/IsNevis/EnhancedIslesMap/main/data/img/nav/compass_upper-left.png", 
-                "1": "https://raw.githubusercontent.com/IsNevis/EnhancedIslesMap/main/data/img/nav/compass_upper-right.png", 
-                "2": "https://raw.githubusercontent.com/IsNevis/EnhancedIslesMap/main/data/img/nav/compass_lower-right.png", 
-                "3": "https://raw.githubusercontent.com/IsNevis/EnhancedIslesMap/main/data/img/nav/compass_lower-left.png"
+                "0": "data/img/nav/compass_upper-left.png", 
+                "1": "data/img/nav/compass_upper-right.png", 
+                "2": "data/img/nav/compass_lower-right.png", 
+                "3": "data/img/nav/compass_lower-left.png"
             }, 
-            "defaultMarker": "https://raw.githubusercontent.com/IsNevis/EnhancedIslesMap/main/data/img/markers/overviewer/signpost.png", 
-            "bedMarker": "https://raw.githubusercontent.com/IsNevis/EnhancedIslesMap/main/data/img/markers/overviewer/bed.png"
+            "defaultMarker": "data/img/markers/overviewer/signpost.png", 
+            "bedMarker": "data/img/markers/overviewer/bed.png"
         }, 
         "LOWERRIGHT": 2, 
         "LOWERLEFT": 3

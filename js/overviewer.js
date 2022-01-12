@@ -157,7 +157,7 @@ overviewer.util = {
 				this.compass_img = L.DomUtil.create('img', 'compass');
 			},
 			render: function() {
-                this.compass_img.src = 'https://raw.githubusercontent.com/IsNevis/EnhancedIslesMap/main/data/img/nav/compass_upper-left.png';
+                this.compass_img.src = 'data/img/nav/compass_upper-left.png';
 			},
 			onAdd: function() {
 				return this.compass_img;
@@ -371,7 +371,7 @@ overviewer.util = {
 							var latlng = overviewer.util.fromWorldToLatLng(db.x, db.y, db.z, obj);
 							var m_icon;
 							if (db.icon != undefined) {
-								m_icon = L.icon({iconUrl: 'https://raw.githubusercontent.com/IsNevis/EnhancedIslesMap/main/data/img/markers/' + db.icon});
+								m_icon = L.icon({iconUrl: 'data/img/markers/' + db.icon});
 							} else {
 								m_icon = icon;
 							}
@@ -871,8 +871,8 @@ overviewer.util = {
 			var raw = markersDB[k].raw;
 			for (var zz in raw) {
 				var ISLESIcon = L.icon({
-					iconUrl: 'https://raw.githubusercontent.com/IsNevis/EnhancedIslesMap/main/data/img/markers/' + raw[zz].icon,
-					iconRetinaUrl: 'https://raw.githubusercontent.com/IsNevis/EnhancedIslesMap/main/data/img/markers/' + raw[zz].icon,
+					iconUrl: 'data/img/markers/' + raw[zz].icon,
+					iconRetinaUrl: 'data/img/markers/' + raw[zz].icon,
 					iconSize: [18, 18]
 				});
 				var ISLESll = overviewer.util.fromWorldToLatLng(raw[zz].x, raw[zz].y, raw[zz].z, ovconf);
