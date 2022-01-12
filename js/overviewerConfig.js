@@ -45,7 +45,7 @@ var overviewerConfig = {
             "zoomLevels": 7,
             "defaultZoom": 2,
             "maxZoom": 5,
-            "path": "https://isnevis.github.io/EnhancedIslesMap/data/renders/Isles",
+            "path": "data/Isles",
             "base": "",
             "bgcolor": "#1a1a1a",
             "world": "Isles",

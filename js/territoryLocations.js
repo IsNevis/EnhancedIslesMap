@@ -33,7 +33,7 @@ function showTerritories(ev) {
 
 function initTerritories() {
 	requestInProgress = true;
-	$.ajax({url: 'https://raw.githubusercontent.com/IsNevis/SkyBlockIslesMap/master/data/territoryList.php', cache: true, success: function(result) {
+	$.ajax({url: 'https://raw.githubusercontent.com/IsNevis/EnhancedIslesMap/main/data/territoryList.json', cache: true, success: function(result) {
 		for(var name in result.territories) {
 			var territory = result.territories[name];
       

@@ -24,7 +24,7 @@ xhttp.onreadystatechange = function() {
     overviewer.util.initialize();
   }
 };
-xhttp.open('GET', 'https://raw.githubusercontent.com/IsNevis/SkyBlockIslesMap/master/data/locationsData.json', true);
+xhttp.open('GET', 'https://raw.githubusercontent.com/IsNevis/EnhancedIslesMap/main/data/locationsData.json', true);
 xhttp.send();
 
 var markersDB = {
