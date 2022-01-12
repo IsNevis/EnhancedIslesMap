@@ -16,12 +16,12 @@ var overviewerConfig = {
             "north_direction": 0, 
             "minZoom": 0, 
             "bgcolor": "#1a1a1a", 
-            "zoomLevels": 9, 
+            "zoomLevels": 7, 
             "base": "", 
             "imgextension": "png", 
             "defaultZoom": 2, 
             "world": "Isles", 
-            "maxZoom": 9, 
+            "maxZoom": 5, 
             "path": "https://raw.githubusercontent.com/IsNevis/EnhancedIslesMap/main/data/renders/Isles/", 
             "showlocationmarker": true
         }
@@ -62,9 +62,9 @@ var overviewerConfig = {
             "pan": true
         }, 
         "center": [
-            -314, 
-            67, 
-            94
+            785, 
+            64, 
+            -464
         ], 
         "cacheTag": "1575601333"
     }
