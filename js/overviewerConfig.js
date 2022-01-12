@@ -5,10 +5,10 @@ var overviewerConfig = {
     "tilesets": [
         {
             "spawn": [
-                -1572, 
-                53, 
-                -1668
-            ], 
+                -636, 
+                64, 
+                1246
+            ],
             "isOverlay": false, 
             "last_rendertime": 1575421031, 
             "name": "Isles", 
@@ -19,7 +19,7 @@ var overviewerConfig = {
             "zoomLevels": 9,
             "base": "", 
             "imgextension": "png", 
-            "defaultZoom": 2, 
+            "defaultZoom": 1, 
             "world": "Isles", 
             "maxZoom": 9, 
             "path": "./data/renders/Isles/", 
