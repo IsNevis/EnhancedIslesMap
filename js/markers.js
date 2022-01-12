@@ -1,12 +1,11 @@
 var markers = {
-    "normalrender": [
-        {
+    "normalrender": [{
             "groupName": "Boss Altar",
             "icon": "Content_BossAltar.png",
             "createInfoWindow": true,
             "displayName": "Boss Altars",
             "checked": true
-        }, 
+        },
         {
             "groupName": "Dungeons",
             "icon": "Content_Dungeon.png",
@@ -22,88 +21,88 @@ var markers = {
             "checked": true
         },
         {
-			"groupName": "Key Forge Merchant",
-			"icon": "Merchant_KeyForge.png",
-			"createInfoWindow": false,
-			"displayName": "Key Forge Merchants",
-			"checked": true
+            "groupName": "Key Forge Merchant",
+            "icon": "Merchant_KeyForge.png",
+            "createInfoWindow": false,
+            "displayName": "Key Forge Merchants",
+            "checked": true
         },
         {
-			"groupName": "Mini Quest",
-			"icon": "Content_Miniquest.png",
-			"createInfoWindow": false,
-			"displayName": "Mini Quest",
-			"checked": true
+            "groupName": "Mini Quest",
+            "icon": "Content_Miniquest.png",
+            "createInfoWindow": false,
+            "displayName": "Mini Quest",
+            "checked": true
         },
         {
-			"groupName": "Trade Market",
-			"icon": "NPC_TradeMarket.png",
-			"createInfoWindow": false,
-			"displayName": "Trade Market",
-			"checked": true
+            "groupName": "Trade Market",
+            "icon": "NPC_TradeMarket.png",
+            "createInfoWindow": false,
+            "displayName": "Trade Market",
+            "checked": true
         },
         {
-			"groupName": "Guild Master",
-			"icon": "NPC_GuildMaster.png",
-			"createInfoWindow": false,
-			"displayName": "Guild Master",
-			"checked": true
+            "groupName": "Guild Master",
+            "icon": "NPC_GuildMaster.png",
+            "createInfoWindow": false,
+            "displayName": "Guild Master",
+            "checked": true
         },
         {
-			"groupName": "Grind Spot",
-			"icon": "Content_GrindSpot.png",
-			"createdInfoWindow": false,
-			"displayName": "Grind Spot",
-			"checked": true
+            "groupName": "Grind Spot",
+            "icon": "Content_GrindSpot.png",
+            "createdInfoWindow": false,
+            "displayName": "Grind Spot",
+            "checked": true
         },
         {
-			"groupName": "Cave",
-			"icon": "Content_Cave.png",
-			"createdInfoWindow": false,
-			"displayName": "Cave",
-			"checked": true
+            "groupName": "Cave",
+            "icon": "Content_Cave.png",
+            "createdInfoWindow": false,
+            "displayName": "Cave",
+            "checked": true
         },
         {
-			"groupName": "Corrupted Dungeons",
-			"icon": "Content_CorruptedDungeon.png",
-			"createInfoWindow": false,
-			"displayName": "Corrupted Dungeons",
-			"checked": true
+            "groupName": "Corrupted Dungeons",
+            "icon": "Content_CorruptedDungeon.png",
+            "createInfoWindow": false,
+            "displayName": "Corrupted Dungeons",
+            "checked": true
         },
         {
-			"groupName": "Dungeon Merchant",
-			"icon": "Merchant_Dungeon.png",
-			"createInfoWindow": true,
-			"displayName": "Dungeon Merchants",
-			"checked": true
+            "groupName": "Dungeon Merchant",
+            "icon": "Merchant_Dungeon.png",
+            "createInfoWindow": true,
+            "displayName": "Dungeon Merchants",
+            "checked": true
         },
         {
-			"groupName": "Light's Realm",
-			"icon": "Special_LightRealm.png",
-			"createInfoWindow": false,
-			"displayName": "Light Realm Entrance",
-			"checked": true
+            "groupName": "Light's Realm",
+            "icon": "Special_LightRealm.png",
+            "createInfoWindow": false,
+            "displayName": "Light Realm Entrance",
+            "checked": true
         },
         {
-			"groupName": "Fast Travel",
-			"icon": "Special_FastTravel.png",
-			"createInfoWindow": false,
-			"displayName": "Fast Travel",
-			"checked": true
+            "groupName": "Fast Travel",
+            "icon": "Special_FastTravel.png",
+            "createInfoWindow": false,
+            "displayName": "Fast Travel",
+            "checked": true
         },
         {
-			"groupName": "Uth Shrine",
-			"icon": "Special_Rune.png",
-			"createInfoWindow": false,
-			"displayName": "Uth Shrine",
-			"checked": true
+            "groupName": "Uth Shrine",
+            "icon": "Special_Rune.png",
+            "createInfoWindow": false,
+            "displayName": "Uth Shrine",
+            "checked": true
         },
         {
-			"groupName": "Ultimate Discovery",
-			"icon": "Content_UltimateDiscovery.png",
-			"createInfoWindow": false,
-			"displayName": "Ultimate Discovery",
-			"checked": true
+            "groupName": "Ultimate Discovery",
+            "icon": "Content_UltimateDiscovery.png",
+            "createInfoWindow": false,
+            "displayName": "Ultimate Discovery",
+            "checked": true
         },
         {
             "groupName": "Banks",
@@ -271,7 +270,7 @@ var markers = {
             "icon": "Merchant_Other.png",
             "createInfoWindow": false,
             "displayName": "Water Bottle Merchant",
-	    "checked": true
+            "checked": true
         },
         {
             "groupName": "Seasail Merchant",
@@ -288,11 +287,11 @@ var markers = {
             "checked": true
         },
         {
-			"groupName": "Powder Merchant",
-			"icon": "Merchant_Powder.png",
-			"createInfoWindow": false,
-			"displayName": "Powder Merchant",
-			"checked": true
+            "groupName": "Powder Merchant",
+            "icon": "Merchant_Powder.png",
+            "createInfoWindow": false,
+            "displayName": "Powder Merchant",
+            "checked": true
         },
         {
             "groupName": "Quartz Merchant",
@@ -425,7 +424,7 @@ var markers = {
             "createInfoWindow": false,
             "displayName": "Woodworking Station",
             "checked": true
-        },	
+        },
         {
             "groupName": "Tool Merchant",
             "icon": "Merchant_Tool.png",

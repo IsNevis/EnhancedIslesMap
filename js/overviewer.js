@@ -21,65 +21,65 @@ overviewer.territories = null;
 overviewer.current_layer = {};
 
 overviewer.collections = {
-        ISLESms: [],
-        /**
-         * MapTypes that aren't overlays will end up in here.
-         */
-        'mapTypes': {},
-        /**
-         * The mapType names are in here.
-         */
-        'mapTypeIds': [],
-        /**
-         * This is the current infoWindow object, we keep track of it so that
-         * there is only one open at a time.
-         */
-        'infoWindow': null,
+    ISLESms: [],
+    /**
+     * MapTypes that aren't overlays will end up in here.
+     */
+    'mapTypes': {},
+    /**
+     * The mapType names are in here.
+     */
+    'mapTypeIds': [],
+    /**
+     * This is the current infoWindow object, we keep track of it so that
+     * there is only one open at a time.
+     */
+    'infoWindow': null,
 
-        'centers': {},
-        'overlays': {},
+    'centers': {},
+    'overlays': {},
 
-        'worldViews': [],
+    'worldViews': [],
 
-        'haveSigns': false,
+    'haveSigns': false,
 
-        /**
-         * Hold the raw marker data for each tilest
-         */
-        'markerInfo': {},
+    /**
+     * Hold the raw marker data for each tilest
+     */
+    'markerInfo': {},
 
-        /**
-         * holds a reference to the spawn marker.
-         */
-        'spawnMarker': null,
+    /**
+     * holds a reference to the spawn marker.
+     */
+    'spawnMarker': null,
 
-	/**
-	 * if a user visits a specific URL, this marker will point to the coordinates in the hash
-	 */
-        'locationMarker': null
-    };
+    /**
+     * if a user visits a specific URL, this marker will point to the coordinates in the hash
+     */
+    'locationMarker': null
+};
 
 overviewer.classes = {
-        /**
-         * Our custom projection maps Latitude to Y, and Longitude to X as
-         * normal, but it maps the range [0.0, 1.0] to [0, tileSize] in both
-         * directions so it is easier to position markers, etc. based on their
-         * position (find their position in the lowest-zoom image, and divide
-         * by tileSize)
-         */
-        'MapProjection' : function() {
-            this.inverseTileSize = 1.0 / overviewerConfig.CONST.tileSize;
-        },
-        /**
-         * This is a mapType used only for debugging, to draw a grid on the screen
-         * showing the tile co-ordinates and tile path. Currently the tile path
-         * part does not work.
-         *
-         * @param google.maps.Size tileSize
-         */
-        'CoordMapType': function(tileSize) {
-            this.tileSize = tileSize;
-        }
+    /**
+     * Our custom projection maps Latitude to Y, and Longitude to X as
+     * normal, but it maps the range [0.0, 1.0] to [0, tileSize] in both
+     * directions so it is easier to position markers, etc. based on their
+     * position (find their position in the lowest-zoom image, and divide
+     * by tileSize)
+     */
+    'MapProjection': function () {
+        this.inverseTileSize = 1.0 / overviewerConfig.CONST.tileSize;
+    },
+    /**
+     * This is a mapType used only for debugging, to draw a grid on the screen
+     * showing the tile co-ordinates and tile path. Currently the tile path
+     * part does not work.
+     *
+     * @param google.maps.Size tileSize
+     */
+    'CoordMapType': function (tileSize) {
+        this.tileSize = tileSize;
+    }
 
 };
 
@@ -93,7 +93,7 @@ overviewer.util = {
 
     /* fuzz tester!
      */
-    'testMaths': function(t) {
+    'testMaths': function (t) {
         var initx = Math.floor(Math.random() * 400) - 200;
         var inity = 64;
         var initz = Math.floor(Math.random() * 400) - 200;
@@ -116,341 +116,370 @@ overviewer.util = {
      * Probably shouldn't need changing unless some very different kind of new
      * feature gets added.
      */
-    'initialize': function() {
+    'initialize': function () {
 
-		overviewer.util.initializePolyfills();
-		overviewer.util.initializeMarkers();
+        overviewer.util.initializePolyfills();
+        overviewer.util.initializeMarkers();
 
-		document.getElementById('NoJSWarning').remove();
-		
-		overviewer.coordBoxClass = L.Control.extend({
-			options: {
-				position: 'bottomleft'
-			},
-			initialize: function() {
-				this.coord_box = L.DomUtil.create('div', 'coordbox');
-			},
-			render: function(latlng) {
-				var currWorld = overviewer.current_world;
-				if (currWorld == null) { return; }
+        document.getElementById('NoJSWarning').remove();
 
-				var currTileset = overviewer.current_layer[currWorld];
-				if (currTileset == null) { return; }
+        overviewer.coordBoxClass = L.Control.extend({
+            options: {
+                position: 'bottomleft'
+            },
+            initialize: function () {
+                this.coord_box = L.DomUtil.create('div', 'coordbox');
+            },
+            render: function (latlng) {
+                var currWorld = overviewer.current_world;
+                if (currWorld == null) {
+                    return;
+                }
 
-				var ovconf = currTileset.tileSetConfig;
+                var currTileset = overviewer.current_layer[currWorld];
+                if (currTileset == null) {
+                    return;
+                }
 
-				w_coords = overviewer.util.fromLatLngToWorld(latlng.lat, latlng.lng, ovconf);
+                var ovconf = currTileset.tileSetConfig;
 
-				var r_x = Math.floor(Math.floor(w_coords.x / 16.0) / 32.0);
-				var r_z = Math.floor(Math.floor(w_coords.z / 16.0) / 32.0);
-				var r_name = 'r.' + r_x + '.' + r_z + '.mca';
+                w_coords = overviewer.util.fromLatLngToWorld(latlng.lat, latlng.lng, ovconf);
 
-				this.coord_box.innerHTML = "<strong>X</strong> " + Math.round(w_coords.x) + " <strong>Z</strong> " + Math.round(w_coords.z) + " (" + r_name + ")";
-			},
-			onAdd: function() {
-				return this.coord_box;
-			}
-		});
-		overviewer.compassClass = L.Control.extend({
-			initialize: function(options) {
-				L.Util.setOptions(this, options);
-				this.compass_img = L.DomUtil.create('img', 'compass');
-			},
-			render: function() {
+                var r_x = Math.floor(Math.floor(w_coords.x / 16.0) / 32.0);
+                var r_z = Math.floor(Math.floor(w_coords.z / 16.0) / 32.0);
+                var r_name = 'r.' + r_x + '.' + r_z + '.mca';
+
+                this.coord_box.innerHTML = "<strong>X</strong> " + Math.round(w_coords.x) + " <strong>Z</strong> " + Math.round(w_coords.z) + " (" + r_name + ")";
+            },
+            onAdd: function () {
+                return this.coord_box;
+            }
+        });
+        overviewer.compassClass = L.Control.extend({
+            initialize: function (options) {
+                L.Util.setOptions(this, options);
+                this.compass_img = L.DomUtil.create('img', 'compass');
+            },
+            render: function () {
                 this.compass_img.src = 'data/img/nav/compass_upper-left.png';
-			},
-			onAdd: function() {
-				return this.compass_img;
-			}
-		});
-		overviewer.control = L.Control.extend({ 
-			initialize: function(options) {
-				L.Util.setOptions(this, options);
+            },
+            onAdd: function () {
+                return this.compass_img;
+            }
+        });
+        overviewer.control = L.Control.extend({
+            initialize: function (options) {
+                L.Util.setOptions(this, options);
 
-				this.container = L.DomUtil.create('div', 'worldcontrol');
-				this.select = L.DomUtil.create('select');
-				this.select.onchange = this.onChange;
-				this.container.appendChild(this.select);
-			},
-			addWorld: function(world) {
-				var option = L.DomUtil.create('option');
-				option.value = world;
-				option.innerText = world;
-				this.select.appendChild(option);
-			},
-			onChange: function(ev) {
-				console.log(ev.target);
-				console.log(ev.target.value);
-				var selected_world = ev.target.value;
+                this.container = L.DomUtil.create('div', 'worldcontrol');
+                this.select = L.DomUtil.create('select');
+                this.select.onchange = this.onChange;
+                this.container.appendChild(this.select);
+            },
+            addWorld: function (world) {
+                var option = L.DomUtil.create('option');
+                option.value = world;
+                option.innerText = world;
+                this.select.appendChild(option);
+            },
+            onChange: function (ev) {
+                console.log(ev.target);
+                console.log(ev.target.value);
+                var selected_world = ev.target.value;
 
 
-				// save current view for the current_world
-				overviewer.collections.centers[overviewer.current_world][0] = overviewer.map.getCenter();
-				overviewer.collections.centers[overviewer.current_world][1] = overviewer.map.getZoom();
+                // save current view for the current_world
+                overviewer.collections.centers[overviewer.current_world][0] = overviewer.map.getCenter();
+                overviewer.collections.centers[overviewer.current_world][1] = overviewer.map.getZoom();
 
-				overviewer.layerCtrl.remove();
+                overviewer.layerCtrl.remove();
 
-				overviewer.layerCtrl = L.control.layers(overviewer.collections.mapTypes[selected_world],overviewer.collections.overlays[selected_world],{collapsed: false, position: 'bottomleft'}).addTo(overviewer.map);
+                overviewer.layerCtrl = L.control.layers(overviewer.collections.mapTypes[selected_world], overviewer.collections.overlays[selected_world], {
+                    collapsed: false,
+                    position: 'bottomleft'
+                }).addTo(overviewer.map);
 
-				for (var world_name in overviewer.collections.mapTypes) {
-					for (var tset_name in overviewer.collections.mapTypes[world_name]) {
-						var lyr = overviewer.collections.mapTypes[world_name][tset_name];
-						if (world_name != selected_world) {
-							if (overviewer.map.hasLayer(lyr)) {
-								overviewer.map.removeLayer(lyr);
-							}
-						}
-						if (lyr.tileSetConfig.marker_groups) {
-							for (var marker_group in lyr.tileSetConfig.marker_groups) {
-								lyr.tileSetConfig.marker_groups[marker_group].remove();
-							}
-						}
-						if (lyr.tileSetConfig.markerCtrl) {
-							lyr.tileSetConfig.markerCtrl.remove();
-						}
-					}
+                for (var world_name in overviewer.collections.mapTypes) {
+                    for (var tset_name in overviewer.collections.mapTypes[world_name]) {
+                        var lyr = overviewer.collections.mapTypes[world_name][tset_name];
+                        if (world_name != selected_world) {
+                            if (overviewer.map.hasLayer(lyr)) {
+                                overviewer.map.removeLayer(lyr);
+                            }
+                        }
+                        if (lyr.tileSetConfig.marker_groups) {
+                            for (var marker_group in lyr.tileSetConfig.marker_groups) {
+                                lyr.tileSetConfig.marker_groups[marker_group].remove();
+                            }
+                        }
+                        if (lyr.tileSetConfig.markerCtrl) {
+                            lyr.tileSetConfig.markerCtrl.remove();
+                        }
+                    }
 
-					for (var tset_name in overviewer.collections.overlays[world_name]) {
-						var lyr = overviewer.collections.overlays[world_name][tset_name];
-						if (world_name != selected_world) {
-							if (overviewer.map.hasLayer(lyr)) overviewer.map.removeLayer(lyr);
-						}
-					}
-				}
-				var center = overviewer.collections.centers[selected_world];
-				overviewer.map.setView(center[0], center[1]);
+                    for (var tset_name in overviewer.collections.overlays[world_name]) {
+                        var lyr = overviewer.collections.overlays[world_name][tset_name];
+                        if (world_name != selected_world) {
+                            if (overviewer.map.hasLayer(lyr)) overviewer.map.removeLayer(lyr);
+                        }
+                    }
+                }
+                var center = overviewer.collections.centers[selected_world];
+                overviewer.map.setView(center[0], center[1]);
 
-				overviewer.current_world = selected_world;
+                overviewer.current_world = selected_world;
 
-				if (overviewer.collections.mapTypes[selected_world] && overviewer.current_layer[selected_world]) {
-					overviewer.map.addLayer(overviewer.collections.mapTypes[selected_world][overviewer.current_layer[selected_world].tileSetConfig.name]);
-				} else {
-					var tset_name = Object.keys(overviewer.collections.mapTypes[selected_world])[0]
-					overviewer.map.addLayer(overviewer.collections.mapTypes[selected_world][tset_name]);
-				}
-			},
-			onAdd: function() {
-				return this.container;
-			}
-		});
-	
-		overviewer.map = L.map('mcmap', {
-			crs: L.CRS.Simple,
-			minZoom:4,
-			zoomControl: false
-		});
-		overviewer.map.on('load', function(ev) {
-			window.setTimeout(overviewer.util.runReadyQueue(), 2000);
-			overviewer.util.isReady = true;
-		});
-		overviewer.map.attributionControl.setPrefix('<a href="https://isnevis.github.io">IsNevis</a>');
-		
-		overviewer.map.on('baselayerchange', function(ev) {
-			// before updating the current_layer, remove the marker control, if it exists
-			if (overviewer.current_world && overviewer.current_layer[overviewer.current_world]) {
-				let tsc = overviewer.current_layer[overviewer.current_world].tileSetConfig;
+                if (overviewer.collections.mapTypes[selected_world] && overviewer.current_layer[selected_world]) {
+                    overviewer.map.addLayer(overviewer.collections.mapTypes[selected_world][overviewer.current_layer[selected_world].tileSetConfig.name]);
+                } else {
+                    var tset_name = Object.keys(overviewer.collections.mapTypes[selected_world])[0]
+                    overviewer.map.addLayer(overviewer.collections.mapTypes[selected_world][tset_name]);
+                }
+            },
+            onAdd: function () {
+                return this.container;
+            }
+        });
 
-				if (tsc.markerCtrl)
-					tsc.markerCtrl.remove();
-				if (tsc.marker_groups) {
-					for (var marker_group in tsc.marker_groups) {
-						tsc.marker_groups[marker_group].remove();
-					}
-				}
-			}
-			overviewer.current_layer[overviewer.current_world] = ev.layer;
-			var ovconf = ev.layer.tileSetConfig;
+        overviewer.map = L.map('mcmap', {
+            crs: L.CRS.Simple,
+            zoomControl: false
+        });
+        overviewer.map.on('load', function (ev) {
+            window.setTimeout(overviewer.util.runReadyQueue(), 2000);
+            overviewer.util.isReady = true;
+        });
+        overviewer.map.attributionControl.setPrefix('<a href="https://isnevis.github.io">IsNevis</a>');
 
-			// Change the compass
-			overviewer.compass.render(ovconf.north_direction);
-			
-			// Set the background colour
-			document.getElementById("mcmap").style.backgroundColor = ovconf.bgcolor;
-			
-			if (overviewer.collections.locationMarker) {
-				overviewer.collections.locationMarker.remove();
-			}
-			// Remove old spawn marker, add new one
-			if (overviewer.collections.spawnMarker) {
-				overviewer.collections.spawnMarker.remove();
-			}
-			if (typeof(ovconf.spawn) == "object") {
-				var spawnIcon = L.icon({
-					iconUrl: overviewerConfig.CONST.image.spawnMarker,
-					iconRetinaUrl: overviewerConfig.CONST.image.spawnMarker2x,
-					iconSize: [32, 37],
-					iconAnchor: [15, 33],
-				});
-				var latlng = overviewer.util.fromWorldToLatLng(ovconf.spawn[0], ovconf.spawn[1], ovconf.spawn[2], ovconf);
-				var ohaimark = L.marker(latlng, {icon: spawnIcon, title: "Spawn"});
-				ohaimark.on('click', function(ev) {
-					overviewer.map.setView(ev.latlng);
-				});
-				//overviewer.collections.spawnMarker = ohaimark
-				//overviewer.collections.spawnMarker.addTo(overviewer.map);
-			} else {
-				overviewer.collections.spawnMarker = null;
-			}
-			overviewer.util.initIcons();
-	
-			// reset the markers control with the markers for this layer
-			if (ovconf.marker_groups) {
-				console.log("markers for", ovconf.marker_groups);
-				ovconf.markerCtrl = L.control.layers([], ovconf.marker_groups, {collapsed: false}).addTo(overviewer.map);
-			}
-			overviewer.util.updateHash();
-		});
-		
-		overviewer.map.on('moveend', function(ev) {
-			overviewer.util.updateHash();
-		});
+        overviewer.map.on('baselayerchange', function (ev) {
+            // before updating the current_layer, remove the marker control, if it exists
+            if (overviewer.current_world && overviewer.current_layer[overviewer.current_world]) {
+                let tsc = overviewer.current_layer[overviewer.current_world].tileSetConfig;
 
-		var tset = overviewerConfig.tilesets[0];
+                if (tsc.markerCtrl)
+                    tsc.markerCtrl.remove();
+                if (tsc.marker_groups) {
+                    for (var marker_group in tsc.marker_groups) {
+                        tsc.marker_groups[marker_group].remove();
+                    }
+                }
+            }
+            overviewer.current_layer[overviewer.current_world] = ev.layer;
+            var ovconf = ev.layer.tileSetConfig;
 
-		overviewer.map.on("click", function(e) {
-			console.log(e.latlng);
+            // Change the compass
+            overviewer.compass.render(ovconf.north_direction);
+
+            // Set the background colour
+            document.getElementById("mcmap").style.backgroundColor = ovconf.bgcolor;
+
+            if (overviewer.collections.locationMarker) {
+                overviewer.collections.locationMarker.remove();
+            }
+            // Remove old spawn marker, add new one
+            if (overviewer.collections.spawnMarker) {
+                overviewer.collections.spawnMarker.remove();
+            }
+            if (typeof (ovconf.spawn) == "object") {
+                var spawnIcon = L.icon({
+                    iconUrl: overviewerConfig.CONST.image.spawnMarker,
+                    iconRetinaUrl: overviewerConfig.CONST.image.spawnMarker2x,
+                    iconSize: [32, 37],
+                    iconAnchor: [15, 33],
+                });
+                var latlng = overviewer.util.fromWorldToLatLng(ovconf.spawn[0], ovconf.spawn[1], ovconf.spawn[2], ovconf);
+                var ohaimark = L.marker(latlng, {
+                    icon: spawnIcon,
+                    title: "Spawn"
+                });
+                ohaimark.on('click', function (ev) {
+                    overviewer.map.setView(ev.latlng);
+                });
+                //overviewer.collections.spawnMarker = ohaimark
+                //overviewer.collections.spawnMarker.addTo(overviewer.map);
+            } else {
+                overviewer.collections.spawnMarker = null;
+            }
+            overviewer.util.initIcons();
+
+            // reset the markers control with the markers for this layer
+            if (ovconf.marker_groups) {
+                console.log("markers for", ovconf.marker_groups);
+                ovconf.markerCtrl = L.control.layers([], ovconf.marker_groups, {
+                    collapsed: false
+                }).addTo(overviewer.map);
+            }
+            overviewer.util.updateHash();
+        });
+
+        overviewer.map.on('moveend', function (ev) {
+            overviewer.util.updateHash();
+        });
+
+        var tset = overviewerConfig.tilesets[0];
+
+        overviewer.map.on("click", function (e) {
+            console.log(e.latlng);
             var point = overviewer.util.fromLatLngToWorld(e.latlng.lat, e.latlng.lng, tset);
-			console.log(point);
-		});
-		
-		var tilesetLayers = {};
-		
-		overviewer.worldCtrl = new overviewer.control();
-		overviewer.compass = new overviewer.compassClass(overviewerConfig.CONST.image.compass);
-		overviewer.coord_box = new overviewer.coordBoxClass();
+            console.log(point);
+        });
 
-		$.each(overviewerConfig.worlds, function(idx, world_name) {
-	        overviewer.collections.mapTypes[world_name] = {};
-	        overviewer.collections.overlays[world_name] = {};
-		    overviewer.worldCtrl.addWorld(world_name);
-		});
+        var tilesetLayers = {};
 
-		overviewer.compass.addTo(overviewer.map);
-		//overviewer.worldCtrl.addTo(overviewer.map);
-		overviewer.coord_box.addTo(overviewer.map);
+        overviewer.worldCtrl = new overviewer.control();
+        overviewer.compass = new overviewer.compassClass(overviewerConfig.CONST.image.compass);
+        overviewer.coord_box = new overviewer.coordBoxClass();
 
-		L.control.zoom({
-			position: 'bottomright'
-		}).addTo(overviewer.map);
+        $.each(overviewerConfig.worlds, function (idx, world_name) {
+            overviewer.collections.mapTypes[world_name] = {};
+            overviewer.collections.overlays[world_name] = {};
+            overviewer.worldCtrl.addWorld(world_name);
+        });
 
-		overviewer.map.on('mousemove', function(ev) {
+        overviewer.compass.addTo(overviewer.map);
+        //overviewer.worldCtrl.addTo(overviewer.map);
+        overviewer.coord_box.addTo(overviewer.map);
+
+        L.control.zoom({
+            position: 'bottomright'
+        }).addTo(overviewer.map);
+
+        overviewer.map.on('mousemove', function (ev) {
             overviewer.coord_box.render(ev.latlng);
-		});
-		
-		$.each(overviewerConfig.tilesets, function(idx, obj) {
-			var myLayer = new L.tileLayer('', {
-				tileSize: overviewerConfig.CONST.tileSize,
-				noWrap: true,
-				maxZoom: obj.maxZoom,
-				minZoom: obj.minZoom,
-				errorTileUrl: obj.base + obj.path + "/blank." + obj.imgextension,
-			});
-			myLayer.getTileUrl = overviewer.util.getTileUrlGenerator(obj.path, obj.base, obj.imgextension);
+        });
 
-			if (obj.isOverlay) {
-				overviewer.collections.overlays[obj.world][obj.name] = myLayer;
-			} else {
-				overviewer.collections.mapTypes[obj.world][obj.name] = myLayer;
-			}
+        $.each(overviewerConfig.tilesets, function (idx, obj) {
+            var myLayer = new L.tileLayer('', {
+                tileSize: overviewerConfig.CONST.tileSize,
+                noWrap: true,
+                maxZoom: obj.maxZoom,
+                minZoom: obj.minZoom,
+                errorTileUrl: obj.base + obj.path + "/blank." + obj.imgextension,
+            });
+            myLayer.getTileUrl = overviewer.util.getTileUrlGenerator(obj.path, obj.base, obj.imgextension);
 
-			obj.marker_groups = undefined;
+            if (obj.isOverlay) {
+                overviewer.collections.overlays[obj.world][obj.name] = myLayer;
+            } else {
+                overviewer.collections.mapTypes[obj.world][obj.name] = myLayer;
+            }
 
-			if (overviewer.collections.haveSigns == true) {
-				// if there are markers for this tileset, create them now
-				if ((typeof markers !== 'undefined') && (obj.path in markers)) {
-					console.log("this tileset has markers:", obj);
-					obj.marker_groups = {};
-					for (var mkidx = 0; mkidx < markers[obj.path].length; mkidx++) {
-						var marker_group = new L.layerGroup();
-						var marker_entry = markers[obj.path][mkidx];
-						var icon =  L.icon({iconUrl: marker_entry.icon});
-						console.log("marker group:", marker_entry.displayName, marker_entry.groupName);
+            obj.marker_groups = undefined;
 
-						for (var dbidx = 0; dbidx < markersDB[marker_entry.groupName].raw.length; dbidx++) {
-							var db = markersDB[marker_entry.groupName].raw[dbidx];
-							var latlng = overviewer.util.fromWorldToLatLng(db.x, db.y, db.z, obj);
-							var m_icon;
-							if (db.icon != undefined) {
-								m_icon = L.icon({iconUrl: 'data/img/markers/' + db.icon});
-							} else {
-								m_icon = icon;
-							}
-							let new_marker = new L.marker(latlng, {icon: m_icon});
-							new_marker.bindPopup(db.text);
-							marker_group.addLayer(new_marker);
-						}
-						obj.marker_groups[marker_entry.displayName] = marker_group;
-					}
-				}
-			}
+            if (overviewer.collections.haveSigns == true) {
+                // if there are markers for this tileset, create them now
+                if ((typeof markers !== 'undefined') && (obj.path in markers)) {
+                    console.log("this tileset has markers:", obj);
+                    obj.marker_groups = {};
+                    for (var mkidx = 0; mkidx < markers[obj.path].length; mkidx++) {
+                        var marker_group = new L.layerGroup();
+                        var marker_entry = markers[obj.path][mkidx];
+                        var icon = L.icon({
+                            iconUrl: marker_entry.icon
+                        });
+                        console.log("marker group:", marker_entry.displayName, marker_entry.groupName);
 
-			myLayer["tileSetConfig"] = obj;
+                        for (var dbidx = 0; dbidx < markersDB[marker_entry.groupName].raw.length; dbidx++) {
+                            var db = markersDB[marker_entry.groupName].raw[dbidx];
+                            var latlng = overviewer.util.fromWorldToLatLng(db.x, db.y, db.z, obj);
+                            var m_icon;
+                            if (db.icon != undefined) {
+                                m_icon = L.icon({
+                                    iconUrl: 'data/img/markers/' + db.icon
+                                });
+                            } else {
+                                m_icon = icon;
+                            }
+                            let new_marker = new L.marker(latlng, {
+                                icon: m_icon
+                            });
+                            new_marker.bindPopup(db.text);
+                            marker_group.addLayer(new_marker);
+                        }
+                        obj.marker_groups[marker_entry.displayName] = marker_group;
+                    }
+                }
+            }
 
-			if (typeof(obj.spawn) == "object") {
-				var latlng = overviewer.util.fromWorldToLatLng(obj.spawn[0], obj.spawn[1], obj.spawn[2], obj);
-				overviewer.collections.centers[obj.world] = [ latlng, 1 ];
-			} else {
-				overviewer.collections.centers[obj.world] = [ [0, 0], 1 ];
-			}
+            myLayer["tileSetConfig"] = obj;
 
-		});
+            if (typeof (obj.spawn) == "object") {
+                var latlng = overviewer.util.fromWorldToLatLng(obj.spawn[0], obj.spawn[1], obj.spawn[2], obj);
+                overviewer.collections.centers[obj.world] = [latlng, 1];
+            } else {
+                overviewer.collections.centers[obj.world] = [
+                    [0, 0], 1
+                ];
+            }
 
-		overviewer.layerCtrl = L.control.layers(overviewer.collections.mapTypes[overviewerConfig.worlds[0]], overviewer.collections.overlays[overviewerConfig.worlds[0]],{collapsed: false, position: 'bottomleft'}).addTo(overviewer.map);
-		overviewer.current_world = overviewerConfig.worlds[0];
+        });
 
-		//myLayer.addTo(overviewer.map);
-		overviewer.map.setView(overviewer.util.fromWorldToLatLng(tset.spawn[0], tset.spawn[1], tset.spawn[2], tset), 1);
+        overviewer.layerCtrl = L.control.layers(overviewer.collections.mapTypes[overviewerConfig.worlds[0]], overviewer.collections.overlays[overviewerConfig.worlds[0]], {
+            collapsed: false,
+            position: 'bottomleft'
+        }).addTo(overviewer.map);
+        overviewer.current_world = overviewerConfig.worlds[0];
 
-		if (!overviewer.util.initHash()) {
-			overviewer.worldCtrl.onChange({target: {value: overviewer.current_world}});
-		}
+        //myLayer.addTo(overviewer.map);
+        overviewer.map.setView(overviewer.util.fromWorldToLatLng(tset.spawn[0], tset.spawn[1], tset.spawn[2], tset), 1);
 
-	},
-    'injectMarkerScript': function(url) {
-        var m = document.createElement('script'); m.type = 'text/javascript'; m.async = false;
+        if (!overviewer.util.initHash()) {
+            overviewer.worldCtrl.onChange({
+                target: {
+                    value: overviewer.current_world
+                }
+            });
+        }
+
+    },
+    'injectMarkerScript': function (url) {
+        var m = document.createElement('script');
+        m.type = 'text/javascript';
+        m.async = false;
         m.src = url;
-        var s = document.getElementsByTagName('script')[0]; s.parentNode.appendChild(m);
+        var s = document.getElementsByTagName('script')[0];
+        s.parentNode.appendChild(m);
     },
 
-    'initializeMarkers': function() {
-        if (overviewer.collections.haveSigns=true) {
-			console.log("initializeMarkers");
+    'initializeMarkers': function () {
+        if (overviewer.collections.haveSigns = true) {
+            console.log("initializeMarkers");
         }
         return;
     },
 
     /** Any polyfills needed to improve browser compatibility
      */
-	'initializePolyfills': function() {
-		// From https://developer.mozilla.org/en-US/docs/Web/API/ChildNode/remove
-		// IE is missing this
-		if (!('remove' in Element.prototype)) {
-			Element.prototype.remove = function() {
-				if (this.parentNode) {
-					this.parentNode.removeChild(this);
-				}
-			};
-		}
-	},
+    'initializePolyfills': function () {
+        // From https://developer.mozilla.org/en-US/docs/Web/API/ChildNode/remove
+        // IE is missing this
+        if (!('remove' in Element.prototype)) {
+            Element.prototype.remove = function () {
+                if (this.parentNode) {
+                    this.parentNode.removeChild(this);
+                }
+            };
+        }
+    },
     /**
      * This adds some methods to these classes because Javascript is stupid
      * and this seems like the best way to avoid re-creating the same methods
      * on each object at object creation time.
      */
-    'initializeClassPrototypes': function() {
-        overviewer.classes.MapProjection.prototype.fromLatLngToPoint = function(latLng) {
+    'initializeClassPrototypes': function () {
+        overviewer.classes.MapProjection.prototype.fromLatLngToPoint = function (latLng) {
             var x = latLng.lng() * overviewerConfig.CONST.tileSize;
             var y = latLng.lat() * overviewerConfig.CONST.tileSize;
             return new google.maps.Point(x, y);
         };
 
-        overviewer.classes.MapProjection.prototype.fromPointToLatLng = function(point) {
+        overviewer.classes.MapProjection.prototype.fromPointToLatLng = function (point) {
             var lng = point.x * this.inverseTileSize;
             var lat = point.y * this.inverseTileSize;
             return new google.maps.LatLng(lat, lng);
         };
 
-        overviewer.classes.CoordMapType.prototype.getTile = function(coord, zoom, ownerDocument) {
+        overviewer.classes.CoordMapType.prototype.getTile = function (coord, zoom, ownerDocument) {
             var div = ownerDocument.createElement('DIV');
             div.innerHTML = '(' + coord.x + ', ' + coord.y + ', ' + zoom +
                 ')' + '<br />';
@@ -475,18 +504,18 @@ overviewer.util = {
      *
      *
      */
-    'ready': function(callback){
+    'ready': function (callback) {
         if (!callback || typeof callback != 'function') return;
-        if (overviewer.util.isReady){ // run instantly if overviewer already is ready
+        if (overviewer.util.isReady) { // run instantly if overviewer already is ready
             overviewer.util.readyQueue.push(callback);
             overviewer.util.runReadyQueue();
         } else {
             overviewer.util.readyQueue.push(callback); // wait until initialize is finished
         }
     },
-    'runReadyQueue': function(){
+    'runReadyQueue': function () {
         for (var i in overviewer.util.readyQueue) {
-			overviewer.util.readyQueue[i]();
+            overviewer.util.readyQueue[i]();
         }
         overviewer.util.readyQueue.length = 0;
     },
@@ -506,8 +535,8 @@ overviewer.util = {
      *     example 3: preg_quote("\\.+*?[^]$(){}=!<>|:");
      *     returns 3: '\\\.\+\*\?\[\^\]\$\(\)\{\}\=\!\<\>\|\:'
      */
-    "pregQuote": function(str) {
-        return (str+'').replace(/([\\\.\+\*\?\[\^\]\$\(\)\{\}\=\!\<\>\|\:])/g, "\\$1");
+    "pregQuote": function (str) {
+        return (str + '').replace(/([\\\.\+\*\?\[\^\]\$\(\)\{\}\=\!\<\>\|\:])/g, "\\$1");
     },
     /**
      * Change the map's div's background color according to the mapType's bg_color setting
@@ -515,7 +544,7 @@ overviewer.util = {
      * @param string mapTypeId
      * @return string
      */
-    'getMapTypeBackgroundColor': function(id) {
+    'getMapTypeBackgroundColor': function (id) {
         return overviewerConfig.tilesets[id].bgcolor;
     },
     /**
@@ -523,7 +552,7 @@ overviewer.util = {
      *
      * @param string msg
      */
-    'debug': function(msg) {
+    'debug': function (msg) {
         if (overviewerConfig.map.debug) {
             console.log(msg);
         }
@@ -534,20 +563,20 @@ overviewer.util = {
      *
      * @return Object
      */
-    'parseQueryString': function() {
+    'parseQueryString': function () {
         var results = {};
         var queryString = location.search.substring(1);
         var pairs = queryString.split('&');
         for (i in pairs) {
             var pos = pairs[i].indexOf('=');
-            var key = pairs[i].substring(0,pos).toLowerCase();
-            var value = pairs[i].substring(pos+1).toLowerCase();
-            overviewer.util.debug( 'Found GET paramter: ' + key + ' = ' + value);
+            var key = pairs[i].substring(0, pos).toLowerCase();
+            var value = pairs[i].substring(pos + 1).toLowerCase();
+            overviewer.util.debug('Found GET paramter: ' + key + ' = ' + value);
             results[key] = value;
         }
         return results;
     },
-    'getDefaultMapTypeId': function() {
+    'getDefaultMapTypeId': function () {
         return overviewer.collections.mapTypeIds[0];
     },
     /**
@@ -563,7 +592,7 @@ overviewer.util = {
      *
      * @return google.maps.LatLng
      */
-    'fromWorldToLatLng': function(x, y, z, tset) {
+    'fromWorldToLatLng': function (x, y, z, tset) {
 
         var zoomLevels = tset.zoomLevels;
         var north_direction = tset.north_direction;
@@ -571,19 +600,19 @@ overviewer.util = {
         // the width and height of all the highest-zoom tiles combined,
         // inverted
         var perPixel = 1.0 / (overviewerConfig.CONST.tileSize *
-                Math.pow(2, zoomLevels));
+            Math.pow(2, zoomLevels));
 
-        if (north_direction == overviewerConfig.CONST.UPPERRIGHT){
+        if (north_direction == overviewerConfig.CONST.UPPERRIGHT) {
             temp = x;
-            x = -z+15;
+            x = -z + 15;
             z = temp;
-        } else if(north_direction == overviewerConfig.CONST.LOWERRIGHT){
-            x = -x+15;
-            z = -z+15;
-        } else if(north_direction == overviewerConfig.CONST.LOWERLEFT){
+        } else if (north_direction == overviewerConfig.CONST.LOWERRIGHT) {
+            x = -x + 15;
+            z = -z + 15;
+        } else if (north_direction == overviewerConfig.CONST.LOWERLEFT) {
             temp = x;
             x = z;
-            z = -temp+15;
+            z = -temp + 15;
         }
 
         // This information about where the center column is may change with
@@ -614,7 +643,7 @@ overviewer.util = {
         // add on 12 px to the X coordinate to center our point
         lng += 12 * perPixel;
 
-        return [-lat*overviewerConfig.CONST.tileSize, lng*overviewerConfig.CONST.tileSize];
+        return [-lat * overviewerConfig.CONST.tileSize, lng * overviewerConfig.CONST.tileSize];
     },
     /**
      * The opposite of fromWorldToLatLng
@@ -626,12 +655,12 @@ overviewer.util = {
      *
      * @return Array
      */
-    'fromLatLngToWorld': function(lat, lng, tset) {
+    'fromLatLngToWorld': function (lat, lng, tset) {
         var zoomLevels = tset.zoomLevels;
         var north_direction = tset.north_direction;
-		
-		lat = -lat/overviewerConfig.CONST.tileSize;
-		lng = lng/overviewerConfig.CONST.tileSize;
+
+        lat = -lat / overviewerConfig.CONST.tileSize;
+        lng = lng / overviewerConfig.CONST.tileSize;
 
         // Initialize world x/y/z object to be returned
         var point = Array();
@@ -642,7 +671,7 @@ overviewer.util = {
         // the width and height of all the highest-zoom tiles combined,
         // inverted
         var perPixel = 1.0 / (overviewerConfig.CONST.tileSize *
-                Math.pow(2, zoomLevels));
+            Math.pow(2, zoomLevels));
 
         // Revert base positioning
         // See equivalent code in fromWorldToLatLng()
@@ -662,20 +691,20 @@ overviewer.util = {
         // only latitude and longitude, so assume Y=64. Since this is lowering
         // down from the height of a chunk, it depends on the chunk height as
         // so:
-        point.x += 256-64;
-        point.z -= 256-64;
+        point.x += 256 - 64;
+        point.z -= 256 - 64;
 
-        if(north_direction == overviewerConfig.CONST.UPPERRIGHT){
+        if (north_direction == overviewerConfig.CONST.UPPERRIGHT) {
             temp = point.z;
-            point.z = -point.x+15;
+            point.z = -point.x + 15;
             point.x = temp;
-        } else if(north_direction == overviewerConfig.CONST.LOWERRIGHT){
-            point.x = -point.x+15;
-            point.z = -point.z+15;
-        } else if(north_direction == overviewerConfig.CONST.LOWERLEFT){
+        } else if (north_direction == overviewerConfig.CONST.LOWERRIGHT) {
+            point.x = -point.x + 15;
+            point.z = -point.z + 15;
+        } else if (north_direction == overviewerConfig.CONST.LOWERLEFT) {
             temp = point.z;
             point.z = point.x;
-            point.x = -temp+15;
+            point.x = -temp + 15;
         }
 
         return point;
@@ -687,36 +716,36 @@ overviewer.util = {
      *
      * @param google.maps.Polygon|google.maps.Polyline shape
      */
-    'createRegionInfoWindow': function(shape) {
+    'createRegionInfoWindow': function (shape) {
         var infowindow = new google.maps.InfoWindow();
-        google.maps.event.addListener(shape, 'click', function(event, i) {
-                if (overviewer.collections.infoWindow) {
+        google.maps.event.addListener(shape, 'click', function (event, i) {
+            if (overviewer.collections.infoWindow) {
                 overviewer.collections.infoWindow.close();
-                }
-                // Replace our Info Window's content and position
-                var point = overviewer.util.fromLatLngToWorld(event.latLng.lat(),event.latLng.lng());
-                var contentString = '<b>Region: ' + shape.name + '</b><br />' +
-                'Clicked Location: <br />' + Math.round(point.x,1) + ', ' + point.y
-                + ', ' + Math.round(point.z,1)
-                + '<br />';
-                infowindow.setContent(contentString);
-                infowindow.setPosition(event.latLng);
-                infowindow.open(overviewer.map);
-                overviewer.collections.infoWindow = infowindow;
-                });
+            }
+            // Replace our Info Window's content and position
+            var point = overviewer.util.fromLatLngToWorld(event.latLng.lat(), event.latLng.lng());
+            var contentString = '<b>Region: ' + shape.name + '</b><br />' +
+                'Clicked Location: <br />' + Math.round(point.x, 1) + ', ' + point.y +
+                ', ' + Math.round(point.z, 1) +
+                '<br />';
+            infowindow.setContent(contentString);
+            infowindow.setPosition(event.latLng);
+            infowindow.open(overviewer.map);
+            overviewer.collections.infoWindow = infowindow;
+        });
     },
     /**
      * Same as createRegionInfoWindow()
      *
      * @param google.maps.Marker marker
      */
-    'createMarkerInfoWindow': function(marker) {
+    'createMarkerInfoWindow': function (marker) {
         var windowContent = '<div class="infoWindow"><p><img src="' + marker.icon +
-            '"/><br />' + marker.content.replace(/\n/g,'<br/>') + '</p></div>';
+            '"/><br />' + marker.content.replace(/\n/g, '<br/>') + '</p></div>';
         var infowindow = new google.maps.InfoWindow({
             'content': windowContent
         });
-        google.maps.event.addListener(marker, 'click', function() {
+        google.maps.event.addListener(marker, 'click', function () {
             if (overviewer.collections.infoWindow) {
                 overviewer.collections.infoWindow.close();
             }
@@ -724,40 +753,44 @@ overviewer.util = {
             overviewer.collections.infoWindow = infowindow;
         });
     },
-    'initHash': function() {
+    'initHash': function () {
         var newHash = window.location.hash;
         if (overviewer.util.lastHash !== newHash) {
             overviewer.util.lastHash = newHash;
-            if(newHash.split("/").length > 1) {
+            if (newHash.split("/").length > 1) {
                 overviewer.util.goToHash();
                 // Clean up the hash.
                 overviewer.util.updateHash();
                 return true;
             } else {
-				return false; // signal to caller that we didn't goto any hash
+                return false; // signal to caller that we didn't goto any hash
             }
         }
     },
-    'setHash': function(x, y, z, zoom, w, maptype)    {
+    'setHash': function (x, y, z, zoom, w, maptype) {
         // save this info is a nice easy to parse format
         var newHash = "#/" + Math.floor(x) + "/" + Math.floor(y) + "/" + Math.floor(z) + "/" + zoom + "/" + encodeURI(w) + "/" + encodeURI(maptype);
         overviewer.util.lastHash = newHash; // this should not trigger initHash
         window.location.replace(newHash);
     },
-    'updateHash': function() {
+    'updateHash': function () {
         // name of current world
         var currWorld = overviewer.current_world;
-        if (currWorld == null) {return;}
-		
-		var currTileset = overviewer.current_layer[currWorld];
-		if (currTileset == null) {return;}
+        if (currWorld == null) {
+            return;
+        }
 
-		var ovconf = currTileset.tileSetConfig;
+        var currTileset = overviewer.current_layer[currWorld];
+        if (currTileset == null) {
+            return;
+        }
+
+        var ovconf = currTileset.tileSetConfig;
 
         var coordinates = overviewer.util.fromLatLngToWorld(overviewer.map.getCenter().lat,
-                overviewer.map.getCenter().lng,
-                ovconf);
-        var zoom = overviewer.map.getZoom();   
+            overviewer.map.getCenter().lng,
+            ovconf);
+        var zoom = overviewer.map.getZoom();
 
         if (zoom >= ovconf.maxZoom) {
             zoom = 'max';
@@ -769,33 +802,33 @@ overviewer.util = {
         }
         overviewer.util.setHash(coordinates.x, coordinates.y, coordinates.z, zoom, currWorld, ovconf.name);
     },
-    'goToHash': function() {
+    'goToHash': function () {
         // Note: the actual data begins at coords[1], coords[0] is empty.
         var coords = window.location.hash.split("/");
 
         var zoom;
         var world_name = null;
         var tileset_name = null;
-        
+
         // The if-statements try to prevent unexpected behaviour when using incomplete hashes, e.g. older links
         if (coords.length > 4) {
             zoom = coords[4];
         }
-        
+
         if (coords.length > 6) {
             world_name = decodeURI(coords[5]);
             tileset_name = decodeURI(coords[6]);
         }
-        
+
         if (world_name == "0") world_name = "SkyblockIsles - overworld";
         if (tileset_name == "0") tileset_name = "SkyblockIsles World";
         var target_layer = overviewer.collections.mapTypes[world_name][tileset_name];
         var ovconf = target_layer.tileSetConfig;
 
         var latlngcoords = overviewer.util.fromWorldToLatLng(parseInt(coords[1]),
-                parseInt(coords[2]),
-                parseInt(coords[3]),
-                ovconf);
+            parseInt(coords[2]),
+            parseInt(coords[3]),
+            ovconf);
 
         if (zoom == 'max') {
             zoom = ovconf.maxZoom;
@@ -819,13 +852,17 @@ overviewer.util = {
             zoom = ovconf.minZoom;
 
         // build a fake event for the world switcher control
-        overviewer.worldCtrl.onChange({target: {value: world_name}});
+        overviewer.worldCtrl.onChange({
+            target: {
+                value: world_name
+            }
+        });
         overviewer.worldCtrl.select.value = world_name;
-		if  (!overviewer.map.hasLayer(target_layer)) {
-			overviewer.map.addLayer(target_layer);
-		}
+        if (!overviewer.map.hasLayer(target_layer)) {
+            overviewer.map.addLayer(target_layer);
+        }
 
-		overviewer.map.setView(latlngcoords, zoom);	 
+        overviewer.map.setView(latlngcoords, zoom);
     },
     /**
      * Generate a function to get the path to a tile at a particular location
@@ -835,74 +872,77 @@ overviewer.util = {
      * @param string pathBase
      * @param string pathExt
      */
-    'getTileUrlGenerator': function(path, pathBase, pathExt) {
-		return function(o) {
-			var url = path;
-			var zoom = o.z;
-			var urlBase = ( pathBase ? pathBase : '' );
-			if(o.x < 0 || o.x >= Math.pow(2, zoom) || o.y < 0 || o.y >= Math.pow(2, zoom)) {
-				url += '/blank';
-			} else if(zoom === 0) {
-				url += '/base';
-			} else {
-				for(var z = zoom - 1; z >= 0; --z) {
-					var x = Math.floor(o.x / Math.pow(2, z)) % 2;
-					var y = Math.floor(o.y / Math.pow(2, z)) % 2;
-					url += '/' + (x + 2 * y);
-				}
-			}
-			url = url + '.' + pathExt;
-			if(typeof overviewerConfig.map.cacheTag !== 'undefined') {
-				url += '?c=' + overviewerConfig.map.cacheTag;
-			}
-			return(urlBase + url);
-		};
-	},
-	/**
-	 * initIcons
-	 * Custom Function 
-	 * Initialize CustomIcons
-	 */
-	'initIcons': function() {
-		// Add CustomIcons
-		var ovconf = overviewer.current_layer[overviewer.current_world].tileSetConfig;
-		Object.keys(markersDB).forEach(function(k,v) {
-			var category = markersDB[k].name;
-			var raw = markersDB[k].raw;
-			for (var zz in raw) {
-				var ISLESIcon = L.icon({
-					iconUrl: 'data/img/markers/' + raw[zz].icon,
-					iconRetinaUrl: 'data/img/markers/' + raw[zz].icon,
-					iconSize: [18, 18]
-				});
-				var ISLESll = overviewer.util.fromWorldToLatLng(raw[zz].x, raw[zz].y, raw[zz].z, ovconf);
-				var ISLESm = L.marker(ISLESll, {icon: ISLESIcon, title: raw[zz].text});
-				ISLESm.on('click', function(ev) {
-					overviewer.map.setView(ev.latlng);
-				});
-				overviewer.collections.ISLESms.push(ISLESm);
-				overviewer.collections.ISLESms[overviewer.collections.ISLESms.length - 1].addTo(overviewer.map);
-			}
-		});
-	},
-	/**
-	 * removeIcons
-	 * Custom Function
-	 * Remove CustomIcons
-	 */
-	'removeIcons': function() {
-		for (var i in overviewer.collections.ISLESms) {
-			overviewer.collections.ISLESms[i].remove();
-		}
-	},
-	/**
-	 * loadIcons
-	 * Custom Function
-	 * Load CustomIcons
-	 */
-	 'loadIcons': function() {
-		for (var i in overviewer.collections.ISLESms) {
-			overviewer.collections.ISLESms[i].addTo(overviewer.map);
-		}
-	 }
+    'getTileUrlGenerator': function (path, pathBase, pathExt) {
+        return function (o) {
+            var url = path;
+            var zoom = o.z;
+            var urlBase = (pathBase ? pathBase : '');
+            if (o.x < 0 || o.x >= Math.pow(2, zoom) || o.y < 0 || o.y >= Math.pow(2, zoom)) {
+                url += '/blank';
+            } else if (zoom === 0) {
+                url += '/base';
+            } else {
+                for (var z = zoom - 1; z >= 0; --z) {
+                    var x = Math.floor(o.x / Math.pow(2, z)) % 2;
+                    var y = Math.floor(o.y / Math.pow(2, z)) % 2;
+                    url += '/' + (x + 2 * y);
+                }
+            }
+            url = url + '.' + pathExt;
+            if (typeof overviewerConfig.map.cacheTag !== 'undefined') {
+                url += '?c=' + overviewerConfig.map.cacheTag;
+            }
+            return (urlBase + url);
+        };
+    },
+    /**
+     * initIcons
+     * Custom Function 
+     * Initialize CustomIcons
+     */
+    'initIcons': function () {
+        // Add CustomIcons
+        var ovconf = overviewer.current_layer[overviewer.current_world].tileSetConfig;
+        Object.keys(markersDB).forEach(function (k, v) {
+            var category = markersDB[k].name;
+            var raw = markersDB[k].raw;
+            for (var zz in raw) {
+                var ISLESIcon = L.icon({
+                    iconUrl: 'data/img/markers/' + raw[zz].icon,
+                    iconRetinaUrl: 'data/img/markers/' + raw[zz].icon,
+                    iconSize: [18, 18]
+                });
+                var ISLESll = overviewer.util.fromWorldToLatLng(raw[zz].x, raw[zz].y, raw[zz].z, ovconf);
+                var ISLESm = L.marker(ISLESll, {
+                    icon: ISLESIcon,
+                    title: raw[zz].text
+                });
+                ISLESm.on('click', function (ev) {
+                    overviewer.map.setView(ev.latlng);
+                });
+                overviewer.collections.ISLESms.push(ISLESm);
+                overviewer.collections.ISLESms[overviewer.collections.ISLESms.length - 1].addTo(overviewer.map);
+            }
+        });
+    },
+    /**
+     * removeIcons
+     * Custom Function
+     * Remove CustomIcons
+     */
+    'removeIcons': function () {
+        for (var i in overviewer.collections.ISLESms) {
+            overviewer.collections.ISLESms[i].remove();
+        }
+    },
+    /**
+     * loadIcons
+     * Custom Function
+     * Load CustomIcons
+     */
+    'loadIcons': function () {
+        for (var i in overviewer.collections.ISLESms) {
+            overviewer.collections.ISLESms[i].addTo(overviewer.map);
+        }
+    }
 };

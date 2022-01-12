@@ -1,58 +1,55 @@
 <!DOCTYPE html>
 <html>
+
 <head>
 
-<title>Enhanced Isles Map</title>
+    <title>Enhanced Isles Map</title>
 
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<meta name="generator" content="Minecraft-Overviewer unknown (unknown)" />
-<meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="generator" content="Minecraft-Overviewer unknown (unknown)" />
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
 
-<script type="text/javascript" src="js/overviewerConfig.js"></script>
-<script type="text/javascript" src="js/overviewer.js"></script>
-<script type="text/javascript" src="js/labels.js"></script>
-<script type="text/javascript" src="js/baseMarkers.js"></script>
-<!--script type="text/javascript" src="js/territoryLocations.js"></script-->
+    <script type="text/javascript" src="js/overviewerConfig.js"></script>
+    <script type="text/javascript" src="js/overviewer.js"></script>
+    <script type="text/javascript" src="js/labels.js"></script>
+    <script type="text/javascript" src="js/baseMarkers.js"></script>
+    <!--script type="text/javascript" src="js/territoryLocations.js"></script-->
 
-<link rel="stylesheet" href="css/day.css" />
-<link rel="stylesheet" href="css/leaflet.css" />
-<script src="js/leaflet.js"></script>
-<link rel="stylesheet" href="css/overviewer.css" type="text/css" />
+    <link rel="stylesheet" href="css/day.css" />
+    <link rel="stylesheet" href="css/leaflet.css" />
+    <script src="js/leaflet.js"></script>
+    <link rel="stylesheet" href="css/overviewer.css" type="text/css" />
 
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.8.2/css/all.min.css" />
-<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.8.2/css/all.min.css" />
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href='https://fonts.googleapis.com/css?family=Titillium+Web' rel='stylesheet' type='text/css'>
 
-<link href='https://fonts.googleapis.com/css?family=Titillium+Web' rel='stylesheet' type='text/css'>
-
-<link rel="icon" type="image/png" sizes="16x16" href="data/img/icon/favicon_16x16.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="data/img/icon/favicon_16x16.png" />
 
 </head>
 
 <body scroll="no" style="overflow:hidden">
-    <div class="nav-media-discord">
-        <a class="discord" href="https://discord.gg/isles" target="_blank">
-            <i class="fab fa-2x fa-discord"></i>
-        </a>
-    </div>
-    <div class="nav-media">
-        <a href="https://github.com/IsNevis" target="_blank">
-            <i class="fab fa-2x fa-github-square"></i>
-        </a>
-
-    </div>
     <!--<input> and <label> are used for menu button-->
-    <input id="toggle" type="checkbox"></input> 
+    <input id="toggle" type="checkbox"></input>
     <label class="toggle" for="toggle"></label>
-    <nav role="navigation" class="navbar navbar-inverse navbar-fixed-top">
-        <div class="container navContainer">
-            <div class="navbar-collapse collapse">
-                <ul id="nav" class="nav navbar-nav">
-                    <li><a href="https://isnevis.github.io" class="sprite-navbar-button home"></a></li>
-                    <li><a href="https://isnevis.github.io/about" class="sprite-navbar-button about"></a></li>
-                    <li class="active"><a id="map" href="https://isnevis.github.io/EnhancedIslesMap/" data-toggle="" class="sprite-navbar-button map"></a></li>
-                </ul>
-            </div>
+    <nav role="navigation" class="navbar">
+        <div class="media-buttons">
+            <a class="media-button" href="https://discord.gg/isles" target="_blank">
+                <i class="fab fa-2x fa-discord"></i>
+            </a>
+            <a class="media-button" href="https://github.com/IsNevis" target="_blank">
+                <i class="fab fa-2x fa-github-square"></i>
+            </a>
         </div>
+        <ul id="nav" class="navbar-nav">
+            <li><a href="https://isnevis.github.io" class="sprite-navbar-button">Home</a></li>
+            <li><a href="https://isnevis.github.io/about" class="sprite-navbar-button">About</a></li>
+            <li class="active"><a id="map" href="https://isnevis.github.io/EnhancedIslesMap/" data-toggle=""
+                    class="sprite-navbar-button">Map</a></li>
+        </ul>
     </nav>
     <div id="mcmap">
         <noscript id="NoJSWarning" style="color:white; background-color:black">
@@ -61,4 +58,5 @@
         </noscript>
     </div>
 </body>
+
 </html>
