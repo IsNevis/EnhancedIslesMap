@@ -1,127 +1,131 @@
 var locationLabels = [];
 overviewer.util.ready(function () {
-	initLocationLabels();
+    initLocationLabels();
 });
 
 function loadLocationLabels() {
-	for (var l in locationLabels) {
-		locationLabels[l].addTo(overviewer.map);
-	}
-	console.log('Sucessfully loaded location labels!');
+    for (var l in locationLabels) {
+        locationLabels[l].addTo(overviewer.map);
+    }
+    console.log('Sucessfully loaded location labels!');
 }
 
 function removeLocationLabels() {
-	for (var l in locationLabels) {
-		locationLabels[l].remove();
-	}
-	console.log('Sucessfully removed location labels!');
+    for (var l in locationLabels) {
+        locationLabels[l].remove();
+    }
+    console.log('Sucessfully removed location labels!');
 }
 
 function initLocationLabels() {
-  setTimeout(function() {
-	var ovconf = overviewer.current_layer[overviewer.current_world].tileSetConfig;
-    
-    function labelHtml(title, fontsize, color) {
-		var t = '<div style="text-align:center; z-index:203; position: absolute; left: -40px; top:-10px;">';
-		t += '<span style="position: relative;';
-		t += 'white-space: nowrap; font-weight: bold;';
-		t += 'font-family: \'Titillium Web\', sans-serif; text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black, 3px 3px 3px #000;';
-		t += 'text-align: center; color:' + color + ';font-size:' + fontsize + 'px;"';
-		t += '>' + title + '</span></div>';
-		return t;
-    }
-    //===============================Big Name==========================
+    setTimeout(function () {
+        var ovconf = overviewer.current_layer[overviewer.current_world].tileSetConfig;
 
-    // The Province of Wynn
-    latLng = overviewer.util.fromWorldToLatLng(103, 64, -1726, ovconf)
-    label = new L.DivIcon({iconSize:[0,0],className:'ISLESLabel',
-        html: labelHtml('The Province of Wynn', '25', '#FFFF55')
-    });
-    l = L.marker(latLng, {icon:label, zIndexOffset:90000});
-    l.addTo(overviewer.map);
-	locationLabels.push(l);
+        function labelHtml(title, fontsize, color) {
+            var t = '<div style="text-align:center; z-index:203; position: absolute; left: -40px; top:-10px;">';
+            t += '<span style="position: relative;';
+            t += 'white-space: nowrap; font-weight: bold;';
+            t += 'font-family: \'Titillium Web\', sans-serif; text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black, 3px 3px 3px #000;';
+            t += 'text-align: center; color:' + color + ';font-size:' + fontsize + 'px;"';
+            t += '>' + title + '</span></div>';
+            return t;
+        }
+        //===============================Big Name==========================
 
-    // The Province of Gavel
-    latLng = overviewer.util.fromWorldToLatLng(-110, 64, -5049, ovconf)
-    label = new L.DivIcon({iconSize:[0,0],className:'ISLESLabel',
-        html: labelHtml('The Province of Gavel', '25', '#FFFF55')
-    });
-    l = L.marker(latLng, {icon:label, zIndexOffset:90000});
-    l.addTo(overviewer.map);
-	locationLabels.push(l);
+        // The Province of Wynn
+        latLng = overviewer.util.fromWorldToLatLng(103, 64, -1726, ovconf)
+        label = new L.DivIcon({
+            iconSize: [0, 0],
+            className: 'ISLESLabel',
+            html: labelHtml('Isles 1', '25', '#FFFF55')
+        });
+        l = L.marker(latLng, {
+            icon: label,
+            zIndexOffset: 90000
+        });
+        l.addTo(overviewer.map);
+        locationLabels.push(l);
 
-	// The Silent Expanse
-    latLng = overviewer.util.fromWorldToLatLng(1144, 64, -845, ovconf)
-    label = new L.DivIcon({iconSize:[0,0],className:'ISLESLabel',
-        html: labelHtml('The Silent Expanse', '25', '#FFFF55')
-    });
-    l = L.marker(latLng, {icon:label, zIndexOffset:91000});
-    l.addTo(overviewer.map);
-	locationLabels.push(l);
-    
-    // Corkus Island
-    latLng = overviewer.util.fromWorldToLatLng(-1522, 64, -2752, ovconf)
-    label = new L.DivIcon({iconSize:[0,0],className:'ISLESLabel',
-        html: labelHtml('Corkus Island', '25', '#FFFF55')
-    });
-	l = L.marker(latLng, {icon:label, zIndexOffset:90000});
-    l.addTo(overviewer.map);
-	locationLabels.push(l);
-    //=================================================================
+        //=================================================================
 
-    //============================Towns================================
-    // Wharfmolo
-    latLng = overviewer.util.fromWorldToLatLng(-548, 64, 517, ovconf)
-    label = new L.DivIcon({iconSize:[0,0],className:'ISLESLabel',
-		html: labelHtml('Wharfmolo<div class="level">[Lv. ?]</div>', '16', '#ffffff') 
-    });
-    l = L.marker(latLng, {icon:label, zIndexOffset:90000});
-    l.addTo(overviewer.map);
-	locationLabels.push(l);
+        //============================Towns================================
+        // Wharfmolo
+        latLng = overviewer.util.fromWorldToLatLng(-548, 64, 517, ovconf)
+        label = new L.DivIcon({
+            iconSize: [0, 0],
+            className: 'ISLESLabel',
+            html: labelHtml('Wharfmolo', '16', '#ffffff')
+        });
+        l = L.marker(latLng, {
+            icon: label,
+            zIndexOffset: 90000
+        });
+        l.addTo(overviewer.map);
+        locationLabels.push(l);
 
-    // Sky
-    latLng = overviewer.util.fromWorldToLatLng(4380, 64, -750, ovconf)
-	label = new L.DivIcon({iconSize:[0,0],className:'ISLESLabel',
-		html: labelHtml('Sky<div class="level">[Lv. ?]</div>', '16', '#ffffff') 
-    });
-    l = L.marker(latLng, {icon:label, zIndexOffset:90000});
-    l.addTo(overviewer.map);
-	locationLabels.push(l);
+        // Sky
+        latLng = overviewer.util.fromWorldToLatLng(4380, 64, -750, ovconf)
+        label = new L.DivIcon({
+            iconSize: [0, 0],
+            className: 'ISLESLabel',
+            html: labelHtml('Sky', '16', '#ffffff')
+        });
+        l = L.marker(latLng, {
+            icon: label,
+            zIndexOffset: 90000
+        });
+        l.addTo(overviewer.map);
+        locationLabels.push(l);
 
-    // Goblin
-    latLng = overviewer.util.fromWorldToLatLng(1840, 64, -1107, ovconf)
-    label = new L.DivIcon({iconSize:[0,0],className:'ISLESLabel',
-        html: labelHtml('Goblin Hollows<div class="level">[Lv. ?]</div>', '16', '#ffffff')
-    });
-    l = L.marker(latLng, {icon:label, zIndexOffset:90000});
-    l.addTo(overviewer.map);
-	locationLabels.push(l);
+        // Goblin
+        latLng = overviewer.util.fromWorldToLatLng(1840, 64, -1107, ovconf)
+        label = new L.DivIcon({
+            iconSize: [0, 0],
+            className: 'ISLESLabel',
+            html: labelHtml('Goblin Hollows', '16', '#ffffff')
+        });
+        l = L.marker(latLng, {
+            icon: label,
+            zIndexOffset: 90000
+        });
+        l.addTo(overviewer.map);
+        locationLabels.push(l);
 
-    // Tortuga
-    latLng = overviewer.util.fromWorldToLatLng(5315, 64, -2025, ovconf)
-    label = new L.DivIcon({iconSize:[0,0],className:'ISLESLabel',
-        html: labelHtml('Tortuga<div class="level">[Lv. ?]</div>', '16', '#ffffff')
-    });
-    l = L.marker(latLng, {icon:label, zIndexOffset:90000});
-    l.addTo(overviewer.map);
-	locationLabels.push(l);
+        // Tortuga
+        latLng = overviewer.util.fromWorldToLatLng(5315, 64, -2025, ovconf)
+        label = new L.DivIcon({
+            iconSize: [0, 0],
+            className: 'ISLESLabel',
+            html: labelHtml('Tortuga', '16', '#ffffff')
+        });
+        l = L.marker(latLng, {
+            icon: label,
+            zIndexOffset: 90000
+        });
+        l.addTo(overviewer.map);
+        locationLabels.push(l);
 
-    // Pyre
-    latLng = overviewer.util.fromWorldToLatLng(-1063, 64, -3062, ovconf)
-    label = new L.DivIcon({iconSize:[0,0],className:'ISLESLabel',
-        html: labelHtml('Pyre<div class="level">[Lv. ?]</div>', '16', '#ffffff')
-    }); 
-    l = L.marker(latLng, {icon:label, zIndexOffset:90000});
-    l.addTo(overviewer.map);
-	locationLabels.push(l);
+        // Pyre
+        latLng = overviewer.util.fromWorldToLatLng(-1063, 64, -3062, ovconf)
+        label = new L.DivIcon({
+            iconSize: [0, 0],
+            className: 'ISLESLabel',
+            html: labelHtml('Pyre', '16', '#ffffff')
+        });
+        l = L.marker(latLng, {
+            icon: label,
+            zIndexOffset: 90000
+        });
+        l.addTo(overviewer.map);
+        locationLabels.push(l);
 
-    //=================================================================
+        //=================================================================
 
 
-    //----------------------------------------------------------------
-    //Format For other type of locations Labels
-    //----------------------------------------------------------------
-    /*
+        //----------------------------------------------------------------
+        //Format For other type of locations Labels
+        //----------------------------------------------------------------
+        /*
     // Maltic
     latLng = overviewer.util.fromWorldToLatLng(-539, 64, -1926, ovconf)
 	label = new L.DivIcon({iconSize:[0,0],className:'ISLESLabel',
@@ -168,7 +172,7 @@ function initLocationLabels() {
 	locationLabels.push(l);
     */
 
-    /*
+        /*
     // Roots of Corruption
     latLng = overviewer.util.fromWorldToLatLng(232, 64, -1291, ovconf)
     label = new L.DivIcon({iconSize:[0,0],className:'ISLESLabel',
@@ -196,6 +200,6 @@ function initLocationLabels() {
     l.addTo(overviewer.map);
 	locationLabels.push(l);
     */
-	
-  }, 2000);
+
+    }, 2000);
 }
