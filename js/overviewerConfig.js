@@ -1,69 +1,75 @@
 var overviewerConfig = {
-    "worlds": [
-        "Isles"
-    ],
-    "tilesets": [{
-        "spawn": [
-            -636,
-            64,
-            1246
-        ],
-        "isOverlay": false,
-        "last_rendertime": 1575421031,
-        "name": "Isles",
-        "poititle": "Markers",
-        "north_direction": 0,
-        "bgcolor": "#1a1a1a",
-        "zoomLevels": 9,
-        "minZoom": "*",
-        "base": "",
-        "imgextension": "png",
-        "defaultZoom": 1,
-        "world": "Isles",
-        "maxZoom": 9,
-        "path": "./data/renders/Isles/",
-        "showlocationmarker": true
-    }],
     "CONST": {
-        "mapDivId": "mcmap",
-        "UPPERLEFT": 0,
         "tileSize": 384,
-        "UPPERRIGHT": 1,
         "image": {
-            "queryMarker": "data/img/markers/overviewer/marker_location.png",
+            "defaultMarker": "data/img/markers/overviewer/signpost.png",
+            "signMarker": "data/img/markers/overviewer/signpost_icon.png",
+            "bedMarker": "data/img/markers/overviewer/bed.png",
             "spawnMarker": "data/img/markers/overviewer/marker_home.png",
             "spawnMarker2x": "data/img/markers/overviewer/marker_home_2x.png",
-            "signMarker": "data/img/markers/overviewer/signpost_icon.png",
+            "queryMarker": "data/img/markers/overviewer/marker_location.png",
             "queryMarker2x": "data/img/markers/overviewer/marker_location_2x.png",
             "compass": {
                 "0": "data/img/gui/compass_upper-left.png",
                 "1": "data/img/gui/compass_upper-right.png",
                 "2": "data/img/gui/compass_lower-right.png",
                 "3": "data/img/gui/compass_lower-left.png"
-            },
-            "defaultMarker": "data/img/markers/overviewer/signpost.png",
-            "bedMarker": "data/img/markers/overviewer/bed.png"
+            }
         },
-        "LOWERRIGHT": 2,
-        "LOWERLEFT": 3
+        "mapDivId": "mcmap",
+        "UPPERLEFT": 0,
+        "UPPERRIGHT": 1,
+        "LOWERLEFT": 3,
+        "LOWERRIGHT": 2
     },
+    "worlds": [
+        "Isles"
+    ],
     "map": {
         "debug": true,
+        "cacheTag": "1642105508",
         "north_direction": "lower-left",
         "controls": {
-            "spawn": true,
-            "coordsBox": true,
+            "pan": true,
             "zoom": true,
-            "mapType": true,
+            "spawn": true,
             "compass": true,
+            "mapType": true,
             "overlays": true,
-            "pan": true
-        },
-        "center": [
-            -636,
-            64,
-            1246
-        ],
-        "cacheTag": "1575601333"
-    }
+            "coordsBox": true
+        }
+    },
+    "tilesets": [
+        {
+            "name": "Isles",
+            "zoomLevels": 9,
+            // defaultZoom does not do anything(Tested using 1 and 2) for some reason, it just goes to min(url) 
+            "defaultZoom": 1,
+            // maxzoom is set to 7 to make sure people dont zoom in too much that thers isnt any tile images 
+            "maxZoom": 7,
+            "path": "./data/renders/Isles/",
+            "base": "",
+            "bgcolor": "#1a1a1a",
+            "world": "Isles",
+            "last_rendertime": 1641640000,
+            "imgextension": "png",
+            "isOverlay": false,
+            "poititle": "Markers",
+            // showlocationmarker was true true in wynn version
+            "showlocationmarker": false,
+            "spawn": [
+                -636,
+                64,
+                1246
+            ],
+            "center": [
+                785,
+                64,
+                -464
+            ],
+            // changing minZoom to "*" will allow you to go further out(-9 according to url)
+            "minZoom": 2,
+            "north_direction": 0
+        }
+    ]
 };
