@@ -42,13 +42,13 @@ var overviewerConfig = {
     "tilesets": [
         {
             "name": "Isles",
-            "zoomLevels": 9,
+            "zoomLevels": 7,
             // defaultZoom does not do anything(Tested using 1 and 2) for some reason, it just goes to min(url) 
             "defaultZoom": 1,
             // maxzoom is set to 7 to make sure people dont zoom in too much that thers isnt any tile images 
             "maxZoom": 7,
-            "path": "./data/renders/Isles/",
-            "base": "",
+            "path": "",
+            "base": "./data/renders/Isles/",
             "bgcolor": "#1a1a1a",
             "world": "Isles",
             "last_rendertime": 1641640000,
@@ -59,14 +59,14 @@ var overviewerConfig = {
             "showlocationmarker": false,
             "showspawn": false,
             "spawn": [
-                -636,
+                0,
                 64,
-                1246
+                0
             ],
             "center": [
-                785,
+                0,
                 64,
-                -464
+                0
             ],
             // changing minZoom to "*" will allow you to go further out(-9 according to url)
             "minZoom": 2,
