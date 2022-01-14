@@ -57,6 +57,7 @@ var overviewerConfig = {
             "poititle": "Markers",
             // showlocationmarker was true true in wynn version
             "showlocationmarker": false,
+            "showspawn": false,
             "spawn": [
                 -636,
                 64,

@@ -1,3 +1,5 @@
+// this is kept just in case i(Nevis) need to use it to compare something in overviewer.js
+
 /* Overviewer.js
  *
  * Must be the first file included from index.html
@@ -16,7 +18,6 @@ overviewer.coord_box = null;
 overviewer.current_world = null;
 overviewer.territories = null;
 
-/// Records the current layer by name (if any) of each world
 overviewer.current_layer = {};
 
 overviewer.collections = {
@@ -35,12 +36,7 @@ overviewer.collections = {
    */
   infoWindow: null,
 
-  /**
-   * When switching regionsets, where should we zoom to?
-   * Defaults to spawn.  Stored as map of maps: world names to layer names to [latlng, zoom]
-   */
   centers: {},
-
   overlays: {},
 
   worldViews: [],
@@ -58,8 +54,7 @@ overviewer.collections = {
   spawnMarker: null,
 
   /**
-   * if a user visits a specific URL, this marker will point to the
-   * coordinates in the hash
+   * if a user visits a specific URL, this marker will point to the coordinates in the hash
    */
   locationMarker: null,
 };
@@ -166,13 +161,12 @@ overviewer.util = {
       },
     });
     overviewer.compassClass = L.Control.extend({
-      initialize: function (imagedict, options) {
+      initialize: function (options) {
         L.Util.setOptions(this, options);
         this.compass_img = L.DomUtil.create("img", "compass");
-        this.imagedict = imagedict;
       },
-      render: function (direction) {
-        this.compass_img.src = this.imagedict[direction];
+      render: function () {
+        this.compass_img.src = "data/img/gui/compass_upper-left.png";
       },
       onAdd: function () {
         return this.compass_img;
@@ -194,52 +188,36 @@ overviewer.util = {
         this.select.appendChild(option);
       },
       onChange: function (ev) {
-        overviewer.util.debug(ev.target);
-        overviewer.util.debug(ev.target.value);
+        console.log(ev.target);
+        console.log(ev.target.value);
         var selected_world = ev.target.value;
 
         // save current view for the current_world
-        let current_center = [
-          overviewer.map.getCenter(),
-          overviewer.map.getZoom(),
-        ];
-        let current_layer =
-          overviewer.current_layer[overviewer.current_world] ||
-          Object.values(
-            overviewer.collections.mapTypes[overviewer.current_world]
-          )[0];
-        let layer_name = current_layer.tileSetConfig.path;
-        overviewer.collections.centers[overviewer.current_world][layer_name] =
-          current_center;
+        overviewer.collections.centers[overviewer.current_world][0] =
+          overviewer.map.getCenter();
+        overviewer.collections.centers[overviewer.current_world][1] =
+          overviewer.map.getZoom();
 
         overviewer.layerCtrl.remove();
 
-        var base_layers = {};
-        var overlay_layers = {};
-        for (var bl in overviewer.collections.mapTypes[selected_world]) {
-          var bl_o = overviewer.collections.mapTypes[selected_world][bl];
-          base_layers[bl_o.tileSetConfig.name] = bl_o;
-        }
-        for (var ol in overviewer.collections.overlays[selected_world]) {
-          var ol_o = overviewer.collections.overlays[selected_world][ol];
-          overlay_layers[ol_o.tileSetConfig.name] = ol_o;
-        }
-
         overviewer.layerCtrl = L.control
           .layers(
-              base_layers, 
-              overlay_layers, 
-              { 
-                  collapsed: false,
-                  position: "bottomleft", 
-                })
+            overviewer.collections.mapTypes[selected_world],
+            overviewer.collections.overlays[selected_world],
+            {
+              collapsed: false,
+              position: "bottomleft",
+            }
+          )
           .addTo(overviewer.map);
 
         for (var world_name in overviewer.collections.mapTypes) {
           for (var tset_name in overviewer.collections.mapTypes[world_name]) {
             var lyr = overviewer.collections.mapTypes[world_name][tset_name];
             if (world_name != selected_world) {
-              if (overviewer.map.hasLayer(lyr)) overviewer.map.removeLayer(lyr);
+              if (overviewer.map.hasLayer(lyr)) {
+                overviewer.map.removeLayer(lyr);
+              }
             }
             if (lyr.tileSetConfig.marker_groups) {
               for (var marker_group in lyr.tileSetConfig.marker_groups) {
@@ -258,58 +236,47 @@ overviewer.util = {
             }
           }
         }
-
-        let selected_layer_name =
-          overviewer.collections.mapTypes[selected_world] &&
-          overviewer.current_layer[selected_world]
-            ? overviewer.current_layer[selected_world].tileSetConfig.path
-            : Object.keys(overviewer.collections.mapTypes[selected_world])[0];
-
-        let center =
-          overviewer.collections.centers[selected_world][selected_layer_name];
+        var center = overviewer.collections.centers[selected_world];
         overviewer.map.setView(center[0], center[1]);
 
         overviewer.current_world = selected_world;
-        overviewer.map.addLayer(
-          overviewer.collections.mapTypes[selected_world][selected_layer_name]
-        );
+
+        if (
+          overviewer.collections.mapTypes[selected_world] &&
+          overviewer.current_layer[selected_world]
+        ) {
+          overviewer.map.addLayer(
+            overviewer.collections.mapTypes[selected_world][
+              overviewer.current_layer[selected_world].tileSetConfig.name
+            ]
+          );
+        } else {
+          var tset_name = Object.keys(
+            overviewer.collections.mapTypes[selected_world]
+          )[0];
+          overviewer.map.addLayer(
+            overviewer.collections.mapTypes[selected_world][tset_name]
+          );
+        }
       },
       onAdd: function () {
         return this.container;
       },
     });
 
-    overviewer.map = L.map("mcmap", { 
+    overviewer.map = L.map("mcmap", {
       crs: L.CRS.Simple,
       zoomControl: false,
     });
-
+    overviewer.map.on("load", function (ev) {
+      window.setTimeout(overviewer.util.runReadyQueue(), 2000);
+      overviewer.util.isReady = true;
+    });
     overviewer.map.attributionControl.setPrefix(
-      '<a href="https://github.com/IsNevis/SkyBlockIslesMap">IsNevis</a>'
+      '<a href="https://isnevis.github.io">IsNevis</a>'
     );
 
     overviewer.map.on("baselayerchange", function (ev) {
-      // when changing the layer, ensure coordinates remain correct
-      if (overviewer.current_layer[overviewer.current_world]) {
-        const center = overviewer.map.getCenter();
-        const currentWorldCoords = overviewer.util.fromLatLngToWorld(
-          center.lat,
-          center.lng,
-          overviewer.current_layer[overviewer.current_world].tileSetConfig
-        );
-
-        const newMapCoords = overviewer.util.fromWorldToLatLng(
-          currentWorldCoords.x,
-          currentWorldCoords.y,
-          currentWorldCoords.z,
-          ev.layer.tileSetConfig
-        );
-
-        overviewer.map.setView(newMapCoords, overviewer.map.getZoom(), {
-          animate: false,
-        });
-      }
-
       // before updating the current_layer, remove the marker control, if it exists
       if (
         overviewer.current_world &&
@@ -354,14 +321,14 @@ overviewer.util = {
           ovconf.spawn[2],
           ovconf
         );
-        var ohaimark = L.marker(latlng, { 
+        var ohaimark = L.marker(latlng, {
           icon: spawnIcon,
-          title: "Spawn"
+          title: "Spawn",
         });
         ohaimark.on("click", function (ev) {
           overviewer.map.setView(ev.latlng);
         });
-        //overviewer.collections.spawnMarker = ohaimark;
+        //overviewer.collections.spawnMarker = ohaimark
         //overviewer.collections.spawnMarker.addTo(overviewer.map);
       } else {
         overviewer.collections.spawnMarker = null;
@@ -370,33 +337,13 @@ overviewer.util = {
 
       // reset the markers control with the markers for this layer
       if (ovconf.marker_groups) {
-        overviewer.util.debug("markers for", ovconf.marker_groups);
+        console.log("markers for", ovconf.marker_groups);
         ovconf.markerCtrl = L.control
-          .layers([], ovconf.marker_groups, { collapsed: false })
+          .layers([], ovconf.marker_groups, {
+            collapsed: false,
+          })
           .addTo(overviewer.map);
       }
-      for (var marker_group in ovconf.marker_groups) {
-        var mg = ovconf.marker_groups[marker_group];
-        if (mg.options.default_checked) {
-          mg.addTo(overviewer.map);
-        }
-      }
-      // Update overlays
-      for (var olw in overviewer.collections.overlays) {
-        for (var ol in overviewer.collections.overlays[olw]) {
-          var ol_o = overviewer.collections.overlays[olw][ol];
-          if (ol_o.tileSetConfig.isOverlay.includes(ovconf.path)) {
-            if (!overviewer.util.isInLayerCtrl(overviewer.layerCtrl, ol_o)) {
-              overviewer.layerCtrl.addOverlay(ol_o, ol_o.tileSetConfig.name);
-            }
-          } else {
-            if (overviewer.util.isInLayerCtrl(overviewer.layerCtrl, ol_o)) {
-              overviewer.layerCtrl.removeLayer(ol_o);
-            }
-          }
-        }
-      }
-
       overviewer.util.updateHash();
     });
 
@@ -407,11 +354,13 @@ overviewer.util = {
     var tset = overviewerConfig.tilesets[0];
 
     overviewer.map.on("click", function (e) {
+      console.log(e.latlng);
       var point = overviewer.util.fromLatLngToWorld(
         e.latlng.lat,
         e.latlng.lng,
         tset
       );
+      console.log(point);
     });
 
     var tilesetLayers = {};
@@ -422,13 +371,12 @@ overviewer.util = {
     );
     overviewer.coord_box = new overviewer.coordBoxClass();
 
-    overviewerConfig.worlds.forEach(function (world_name, idx) {
+    $.each(overviewerConfig.worlds, function (idx, world_name) {
       overviewer.collections.mapTypes[world_name] = {};
       overviewer.collections.overlays[world_name] = {};
       overviewer.worldCtrl.addWorld(world_name);
     });
 
-    //Disable Controls using these by commenting them out
     overviewer.compass.addTo(overviewer.map);
     //overviewer.worldCtrl.addTo(overviewer.map);
     overviewer.coord_box.addTo(overviewer.map);
@@ -443,7 +391,7 @@ overviewer.util = {
       overviewer.coord_box.render(ev.latlng);
     });
 
-    overviewerConfig.tilesets.forEach(function (obj, idx) {
+    $.each(overviewerConfig.tilesets, function (idx, obj) {
       var myLayer = new L.tileLayer("", {
         tileSize: overviewerConfig.CONST.tileSize,
         noWrap: true,
@@ -458,9 +406,9 @@ overviewer.util = {
       );
 
       if (obj.isOverlay) {
-        overviewer.collections.overlays[obj.world][obj.path] = myLayer;
+        overviewer.collections.overlays[obj.world][obj.name] = myLayer;
       } else {
-        overviewer.collections.mapTypes[obj.world][obj.path] = myLayer;
+        overviewer.collections.mapTypes[obj.world][obj.name] = myLayer;
       }
 
       obj.marker_groups = undefined;
@@ -468,15 +416,11 @@ overviewer.util = {
       if (overviewer.collections.haveSigns == true) {
         // if there are markers for this tileset, create them now
         if (typeof markers !== "undefined" && obj.path in markers) {
-          overviewer.util.debug("this tileset has markers:", obj);
+          console.log("this tileset has markers:", obj);
           obj.marker_groups = {};
-
-          // For every group of markers
           for (var mkidx = 0; mkidx < markers[obj.path].length; mkidx++) {
-            // Create a Leaflet layer group
             var marker_group = new L.layerGroup();
             var marker_entry = markers[obj.path][mkidx];
-            /* This was used in wynn
             var icon = L.icon({
               iconUrl: marker_entry.icon,
             });
@@ -485,108 +429,50 @@ overviewer.util = {
               marker_entry.displayName,
               marker_entry.groupName
             );
-            */
-            L.Util.setOptions(marker_group, {
-              default_checked: marker_entry.checked,
-            });
-            var icon = L.divIcon({
-              html: `<img class="ov-marker" src="${marker_entry.icon}">`,
-            });
 
-            // For every marker in group
             for (
               var dbidx = 0;
               dbidx < markersDB[marker_entry.groupName].raw.length;
               dbidx++
             ) {
-              let db = markersDB[marker_entry.groupName].raw[dbidx];
-              var layerObj = undefined;
-
-              // Shape or marker?
-              if ("points" in db) {
-                // Convert all coords
-                plLatLng = db["points"].map(function (p) {
-                  return overviewer.util.fromWorldToLatLng(p.x, p.y, p.z, obj);
+              var db = markersDB[marker_entry.groupName].raw[dbidx];
+              var latlng = overviewer.util.fromWorldToLatLng(
+                db.x,
+                db.y,
+                db.z,
+                obj
+              );
+              var m_icon;
+              if (db.icon != undefined) {
+                m_icon = L.icon({
+                  iconUrl: "data/img/markers/" + db.icon,
                 });
-                options = {
-                  color: db["strokeColor"],
-                  weight: db["strokeWeight"],
-                  fill: db["fill"],
-                };
-                layerObj = db["isLine"]
-                  ? L.polyline(plLatLng, options)
-                  : L.polygon(plLatLng, options);
-                if (db["hovertext"]) {
-                  layerObj.bindTooltip(db["hovertext"], { sticky: true });
-                }
-                // TODO: add other config options (fill color, fill opacity)
               } else {
-                // Convert coords
-                let latlng = overviewer.util.fromWorldToLatLng(
-                  db.x,
-                  db.y,
-                  db.z,
-                  obj
-                );
-                /** */
-                
-                // Set icon and use default icon if not specified
-                let m_icon = L.divIcon({
-                  html: `<img class="ov-marker" src="${
-                    db.icon == undefined ? marker_entry.icon : db.icon
-                  }">`,
-                });
-                // Create marker
-                layerObj = new L.marker(latlng, {
-                  icon: m_icon,
-                  title: db.hovertext,
-                });
+                m_icon = icon;
               }
-              // Add popup to marker
-              if (marker_entry.createInfoWindow && db.text) {
-                layerObj.bindPopup(db.text);
-              }
-              // Add the polyline or marker to the layer
-              marker_group.addLayer(layerObj);
+              let new_marker = new L.marker(latlng, {
+                icon: m_icon,
+              });
+              new_marker.bindPopup(db.text);
+              marker_group.addLayer(new_marker);
             }
-            // Save marker group
-            var layer_name_html;
-            if (marker_entry.showIconInLegend) {
-              layer_name_html =
-                marker_entry.displayName +
-                '<img class="ov-marker-legend" src="' +
-                marker_entry.icon +
-                '"></img>';
-            } else {
-              layer_name_html = marker_entry.displayName;
-            }
-            obj.marker_groups[layer_name_html] = marker_group;
+            obj.marker_groups[marker_entry.displayName] = marker_group;
           }
         }
       }
 
       myLayer["tileSetConfig"] = obj;
 
-      if (!overviewer.collections.centers[obj.world]) {
-        overviewer.collections.centers[obj.world] = {};
-      }
-
-      if (typeof obj.center == "object") {
+      if (typeof obj.spawn == "object") {
         var latlng = overviewer.util.fromWorldToLatLng(
-          obj.center[0],
-          obj.center[1],
-          obj.center[2],
+          obj.spawn[0],
+          obj.spawn[1],
+          obj.spawn[2],
           obj
         );
-        overviewer.collections.centers[obj.world][obj.path] = [
-          latlng,
-          obj.defaultZoom,
-        ];
+        overviewer.collections.centers[obj.world] = [latlng, 1];
       } else {
-        overviewer.collections.centers[obj.world][obj.path] = [
-          [0, 0],
-          obj.defaultZoom,
-        ];
+        overviewer.collections.centers[obj.world] = [[0, 0], 1];
       }
     });
 
@@ -602,25 +488,28 @@ overviewer.util = {
       .addTo(overviewer.map);
     overviewer.current_world = overviewerConfig.worlds[0];
 
-    let default_layer_name = Object.keys(
-      overviewer.collections.mapTypes[overviewer.current_world]
-    )[0];
-    let center =
-      overviewer.collections.centers[overviewer.current_world][
-        default_layer_name
-      ];
-    overviewer.map.setView(center[0], center[1]);
+    //myLayer.addTo(overviewer.map);
+    overviewer.map.setView(
+      overviewer.util.fromWorldToLatLng(
+        tset.spawn[0],
+        tset.spawn[1],
+        tset.spawn[2],
+        tset
+      ),
+      1
+    );
 
     if (!overviewer.util.initHash()) {
       overviewer.worldCtrl.onChange({
-        target: { value: overviewer.current_world },
+        target: {
+          value: overviewer.current_world,
+        },
       });
     }
 
     overviewer.util.runReadyQueue();
     overviewer.util.isReady = true;
   },
-
   injectMarkerScript: function (url) {
     var m = document.createElement("script");
     m.type = "text/javascript";
@@ -650,7 +539,51 @@ overviewer.util = {
       };
     }
   },
+  /**
+   * This adds some methods to these classes because Javascript is stupid
+   * and this seems like the best way to avoid re-creating the same methods
+   * on each object at object creation time.
+   */
+  initializeClassPrototypes: function () {
+    overviewer.classes.MapProjection.prototype.fromLatLngToPoint = function (
+      latLng
+    ) {
+      var x = latLng.lng() * overviewerConfig.CONST.tileSize;
+      var y = latLng.lat() * overviewerConfig.CONST.tileSize;
+      return new google.maps.Point(x, y);
+    };
 
+    overviewer.classes.MapProjection.prototype.fromPointToLatLng = function (
+      point
+    ) {
+      var lng = point.x * this.inverseTileSize;
+      var lat = point.y * this.inverseTileSize;
+      return new google.maps.LatLng(lat, lng);
+    };
+
+    overviewer.classes.CoordMapType.prototype.getTile = function (
+      coord,
+      zoom,
+      ownerDocument
+    ) {
+      var div = ownerDocument.createElement("DIV");
+      div.innerHTML =
+        "(" + coord.x + ", " + coord.y + ", " + zoom + ")" + "<br />";
+      //TODO: figure out how to get the current mapType, I think this
+      //will add the maptile url to the grid thing once it works
+
+      //div.innerHTML += overviewer.collections.mapTypes[0].getTileUrl(coord, zoom);
+
+      //this should probably just have a css class
+      div.style.width = this.tileSize.width + "px";
+      div.style.height = this.tileSize.height + "px";
+      div.style.fontSize = "10px";
+      div.style.borderStyle = "solid";
+      div.style.borderWidth = "1px";
+      div.style.borderColor = "#AAAAAA";
+      return div;
+    };
+  },
   /**
    * onready function for other scripts that rely on overviewer
    * usage: overviewer.util.ready(function(){ // do stuff });
@@ -658,7 +591,7 @@ overviewer.util = {
    *
    */
   ready: function (callback) {
-    if (typeof callback !== "function") return;
+    if (!callback || typeof callback != "function") return;
     if (overviewer.util.isReady) {
       // run instantly if overviewer already is ready
       overviewer.util.readyQueue.push(callback);
@@ -668,11 +601,10 @@ overviewer.util = {
     }
   },
   runReadyQueue: function () {
-    if (overviewer.util.readyQueue.length === 0) return;
-    overviewer.util.readyQueue.forEach(function (callback) {
-      callback();
-    });
-    overviewer.util.readyQueue = [];
+    for (var i in overviewer.util.readyQueue) {
+      overviewer.util.readyQueue[i]();
+    }
+    overviewer.util.readyQueue.length = 0;
   },
   /**
    * Quote an arbitrary string for use in a regex matcher.
@@ -697,13 +629,22 @@ overviewer.util = {
     );
   },
   /**
+   * Change the map's div's background color according to the mapType's bg_color setting
+   *
+   * @param string mapTypeId
+   * @return string
+   */
+  getMapTypeBackgroundColor: function (id) {
+    return overviewerConfig.tilesets[id].bgcolor;
+  },
+  /**
    * Gee, I wonder what this does.
    *
    * @param string msg
    */
-  debug: function (...args) {
+  debug: function (msg) {
     if (overviewerConfig.map.debug) {
-      console.log(...args);
+      console.log(msg);
     }
   },
   /**
@@ -739,7 +680,7 @@ overviewer.util = {
    * @param int y
    * @param TileSetModel model
    *
-   * @return array
+   * @return google.maps.LatLng
    */
   fromWorldToLatLng: function (x, y, z, tset) {
     var zoomLevels = tset.zoomLevels;
@@ -813,9 +754,6 @@ overviewer.util = {
     lat = -lat / overviewerConfig.CONST.tileSize;
     lng = lng / overviewerConfig.CONST.tileSize;
 
-    // lat lng will always be between (0,0) -- top left corner
-    //                                (-384, 384) -- bottom right corner
-
     // Initialize world x/y/z object to be returned
     var point = Array();
     point.x = 0;
@@ -862,6 +800,64 @@ overviewer.util = {
     }
 
     return point;
+  },
+  /**
+   * Create the pop-up infobox for when you click on a region, this can't
+   * be done in-line because of stupid Javascript scoping problems with
+   * closures or something.
+   *
+   * @param google.maps.Polygon|google.maps.Polyline shape
+   */
+  createRegionInfoWindow: function (shape) {
+    var infowindow = new google.maps.InfoWindow();
+    google.maps.event.addListener(shape, "click", function (event, i) {
+      if (overviewer.collections.infoWindow) {
+        overviewer.collections.infoWindow.close();
+      }
+      // Replace our Info Window's content and position
+      var point = overviewer.util.fromLatLngToWorld(
+        event.latLng.lat(),
+        event.latLng.lng()
+      );
+      var contentString =
+        "<b>Region: " +
+        shape.name +
+        "</b><br />" +
+        "Clicked Location: <br />" +
+        Math.round(point.x, 1) +
+        ", " +
+        point.y +
+        ", " +
+        Math.round(point.z, 1) +
+        "<br />";
+      infowindow.setContent(contentString);
+      infowindow.setPosition(event.latLng);
+      infowindow.open(overviewer.map);
+      overviewer.collections.infoWindow = infowindow;
+    });
+  },
+  /**
+   * Same as createRegionInfoWindow()
+   *
+   * @param google.maps.Marker marker
+   */
+  createMarkerInfoWindow: function (marker) {
+    var windowContent =
+      '<div class="infoWindow"><p><img src="' +
+      marker.icon +
+      '"/><br />' +
+      marker.content.replace(/\n/g, "<br/>") +
+      "</p></div>";
+    var infowindow = new google.maps.InfoWindow({
+      content: windowContent,
+    });
+    google.maps.event.addListener(marker, "click", function () {
+      if (overviewer.collections.infoWindow) {
+        overviewer.collections.infoWindow.close();
+      }
+      infowindow.open(overviewer.map, marker);
+      overviewer.collections.infoWindow = infowindow;
+    });
   },
   initHash: function () {
     var newHash = window.location.hash;
@@ -930,7 +926,7 @@ overviewer.util = {
       coordinates.z,
       zoom,
       currWorld,
-      ovconf.path
+      ovconf.name
     );
   },
   goToHash: function () {
@@ -940,24 +936,21 @@ overviewer.util = {
     var zoom;
     var world_name = null;
     var tileset_name = null;
+
     // The if-statements try to prevent unexpected behaviour when using incomplete hashes, e.g. older links
     if (coords.length > 4) {
       zoom = coords[4];
     }
+
     if (coords.length > 6) {
       world_name = decodeURI(coords[5]);
       tileset_name = decodeURI(coords[6]);
     }
 
+    if (world_name == "0") world_name = "SkyblockIsles - overworld";
+    if (tileset_name == "0") tileset_name = "SkyblockIsles World";
     var target_layer =
       overviewer.collections.mapTypes[world_name][tileset_name];
-    if (!target_layer) {
-      var default_tset_name = Object.keys(
-        overviewer.collections.mapTypes[world_name]
-      )[0];
-      target_layer =
-        overviewer.collections.mapTypes[world_name][default_tset_name];
-    }
     var ovconf = target_layer.tileSetConfig;
 
     var latlngcoords = overviewer.util.fromWorldToLatLng(
@@ -978,7 +971,7 @@ overviewer.util = {
         zoom += ovconf.maxZoom;
       } else {
         // fall back to default zoom
-        zoom = ovconf.defaultZoom;
+        zoom = ovconf.minZoom;
       }
     }
 
@@ -987,32 +980,17 @@ overviewer.util = {
     if (zoom < ovconf.minZoom) zoom = ovconf.minZoom;
 
     // build a fake event for the world switcher control
-    overviewer.current_layer[world_name] = target_layer;
-    overviewer.worldCtrl.onChange({ target: { value: world_name } });
+    overviewer.worldCtrl.onChange({
+      target: {
+        value: world_name,
+      },
+    });
     overviewer.worldCtrl.select.value = world_name;
+    if (!overviewer.map.hasLayer(target_layer)) {
+      overviewer.map.addLayer(target_layer);
+    }
 
     overviewer.map.setView(latlngcoords, zoom);
-
-    if (ovconf.showlocationmarker) {
-      var locationIcon = L.icon({
-        iconUrl: overviewerConfig.CONST.image.queryMarker,
-        iconRetinaUrl: overviewerConfig.CONST.image.queryMarker2x,
-        iconSize: [32, 37],
-        iconAnchor: [15, 33],
-      });
-      var locationm = L.marker(latlngcoords, {
-        icon: locationIcon,
-        title: "Linked location",
-      });
-      overviewer.collections.locationMarker = locationm;
-      overviewer.collections.locationMarker.on("contextmenu", function (ev) {
-        overviewer.collections.locationMarker.remove();
-      });
-      overviewer.collections.locationMarker.on("click", function (ev) {
-        overviewer.map.setView(ev.latlng);
-      });
-      overviewer.collections.locationMarker.addTo(overviewer.map);
-    }
   },
   /**
    * Generate a function to get the path to a tile at a particular location
@@ -1050,73 +1028,4 @@ overviewer.util = {
       return urlBase + url;
     };
   },
-  isInLayerCtrl: function (ctrl, layer) {
-    for (var l in ctrl._layers) {
-      if (
-        ctrl._layers[l].layer.tileSetConfig.path == layer.tileSetConfig.path
-      ) {
-        return true;
-      }
-    }
-    return false;
-  },
-  /**
-   * initIcons
-   * Custom Function
-   * Initialize CustomIcons
-   */
-  initIcons: function () {
-    // Add CustomIcons
-    var ovconf =
-      overviewer.current_layer[overviewer.current_world].tileSetConfig;
-    Object.keys(markersDB).forEach(function (k, v) {
-      var category = markersDB[k].name;
-      var raw = markersDB[k].raw;
-      for (var zz in raw) {
-        var ISLESIcon = L.icon({
-          iconUrl: "data/img/markers/" + raw[zz].icon,
-          iconRetinaUrl: "data/img/markers/" + raw[zz].icon,
-          iconSize: [18, 18],
-        });
-        var ISLESll = overviewer.util.fromWorldToLatLng(
-          raw[zz].x,
-          raw[zz].y,
-          raw[zz].z,
-          ovconf
-        );
-        var ISLESm = L.marker(ISLESll, {
-          icon: ISLESIcon,
-          title: raw[zz].text,
-        });
-        ISLESm.on("click", function (ev) {
-          overviewer.map.setView(ev.latlng);
-        });
-        overviewer.collections.ISLESms.push(ISLESm);
-        overviewer.collections.ISLESms[
-          overviewer.collections.ISLESms.length - 1
-        ].addTo(overviewer.map);
-      }
-    });
-  },
-  /**
-   * removeIcons
-   * Custom Function
-   * Remove CustomIcons
-   */
-  removeIcons: function () {
-    for (var i in overviewer.collections.ISLESms) {
-      overviewer.collections.ISLESms[i].remove();
-    }
-  },
-  /**
-   * loadIcons
-   * Custom Function
-   * Load CustomIcons
-   */
-  loadIcons: function () {
-    for (var i in overviewer.collections.ISLESms) {
-      overviewer.collections.ISLESms[i].addTo(overviewer.map);
-    }
-  },
-
 };
