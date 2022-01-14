@@ -161,7 +161,7 @@ overviewer.util = {
                 this.compass_img = L.DomUtil.create('img', 'compass');
             },
             render: function () {
-                this.compass_img.src = 'data/img/nav/compass_upper-left.png';
+                this.compass_img.src = 'data/img/gui/compass_upper-left.png';
             },
             onAdd: function () {
                 return this.compass_img;

@@ -36,10 +36,10 @@ var overviewerConfig = {
             "signMarker": "data/img/markers/overviewer/signpost_icon.png",
             "queryMarker2x": "data/img/markers/overviewer/marker_location_2x.png",
             "compass": {
-                "0": "data/img/nav/compass_upper-left.png",
-                "1": "data/img/nav/compass_upper-right.png",
-                "2": "data/img/nav/compass_lower-right.png",
-                "3": "data/img/nav/compass_lower-left.png"
+                "0": "data/img/gui/compass_upper-left.png",
+                "1": "data/img/gui/compass_upper-right.png",
+                "2": "data/img/gui/compass_lower-right.png",
+                "3": "data/img/gui/compass_lower-left.png"
             },
             "defaultMarker": "data/img/markers/overviewer/signpost.png",
             "bedMarker": "data/img/markers/overviewer/bed.png"
